@@ -975,15 +975,21 @@ body {
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-    /* Prevent zoom and improve touch experience */
+    /* Enable touch scrolling while preventing zoom */
     html {
-        touch-action: manipulation;
+        touch-action: pan-y;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         -khtml-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+    }
+    
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     body {
@@ -1057,6 +1063,13 @@ body {
     .menu-scroll-container::-webkit-scrollbar-thumb {
         background: rgba(255, 215, 0, 0.6);
         border-radius: 4px;
+    }
+    
+    /* Ensure menu is scrollable on mobile */
+    .menu-scroll-container {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
     }
     
     /* Game over screen adjustments */
@@ -1418,5 +1431,12 @@ body {
     #secretCodeInput {
         width: 150px !important;
         margin-right: 5px !important;
+    }
+    
+    /* Ensure scrollable containers work on mobile */
+    .achievements-list,
+    .skins-grid {
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
     }
 }

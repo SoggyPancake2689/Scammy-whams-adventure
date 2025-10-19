@@ -336,37 +336,53 @@ class UIManager {
         // Mobile touch controls
         let touchStartY = 0;
         let touchStartTime = 0;
+        let touchStartX = 0;
         
-        // Touch start - prevent default to avoid scrolling
+        // Touch start - prevent default only for game interactions
         document.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            touchStartY = e.touches[0].clientY;
-            touchStartTime = Date.now();
+            // Only prevent default for game canvas and buttons
+            const target = e.target;
+            const isGameCanvas = target.id === 'gameCanvas';
+            const isButton = target.classList.contains('btn') || target.classList.contains('difficulty-btn') || target.classList.contains('game-btn');
+            
+            if (isGameCanvas || isButton) {
+                e.preventDefault();
+                touchStartY = e.touches[0].clientY;
+                touchStartX = e.touches[0].clientX;
+                touchStartTime = Date.now();
+            }
         }, { passive: false });
         
         // Touch end - handle tap/flap
         document.addEventListener('touchend', (e) => {
-            e.preventDefault();
+            const target = e.target;
+            const isGameCanvas = target.id === 'gameCanvas';
+            const isButton = target.classList.contains('btn') || target.classList.contains('difficulty-btn') || target.classList.contains('game-btn');
             
-            const touchEndTime = Date.now();
-            const touchDuration = touchEndTime - touchStartTime;
-            const touchEndY = e.changedTouches[0].clientY;
-            const touchDistance = Math.abs(touchEndY - touchStartY);
-            
-            // Consider it a tap if:
-            // - Touch duration is short (< 300ms)
-            // - Touch distance is small (< 50px)
-            const isTap = touchDuration < 300 && touchDistance < 50;
-            
-            if (isTap) {
-                if (this.currentScreen === 'mainMenuScreen' && this.selectedDifficulty) {
-                    // Start game from menu
-                    this.showLoading();
-                    game.startGame(this.selectedDifficulty);
-                } else if (this.currentScreen === 'gameHUD' && (game.state === CONSTANTS.STATES.COUNTDOWN || game.state === CONSTANTS.STATES.PLAYING)) {
-                    // Flap diamond during countdown or gameplay
-                    console.log('Touch tap - attempting to flap diamond');
-                    game.flapDiamond();
+            if (isGameCanvas || isButton) {
+                e.preventDefault();
+                
+                const touchEndTime = Date.now();
+                const touchDuration = touchEndTime - touchStartTime;
+                const touchEndY = e.changedTouches[0].clientY;
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchDistance = Math.sqrt(Math.pow(touchEndX - touchStartX, 2) + Math.pow(touchEndY - touchStartY, 2));
+                
+                // Consider it a tap if:
+                // - Touch duration is short (< 300ms)
+                // - Touch distance is small (< 50px)
+                const isTap = touchDuration < 300 && touchDistance < 50;
+                
+                if (isTap) {
+                    if (this.currentScreen === 'mainMenuScreen' && this.selectedDifficulty) {
+                        // Start game from menu
+                        this.showLoading();
+                        game.startGame(this.selectedDifficulty);
+                    } else if (this.currentScreen === 'gameHUD' && (game.state === CONSTANTS.STATES.COUNTDOWN || game.state === CONSTANTS.STATES.PLAYING)) {
+                        // Flap diamond during countdown or gameplay
+                        console.log('Touch tap - attempting to flap diamond');
+                        game.flapDiamond();
+                    }
                 }
             }
         }, { passive: false });
