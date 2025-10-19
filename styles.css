@@ -335,32 +335,6 @@ body {
     50% { opacity: 1; }
 }
 
-/* Loading Screen */
-.loading-content {
-    text-align: center;
-    color: white;
-}
-
-.loading-diamond {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(45deg, #FFD700, #FFA500);
-    transform: rotate(45deg);
-    margin: 0 auto 20px;
-    animation: diamondSpin 1s linear infinite;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
-}
-
-@keyframes diamondSpin {
-    from { transform: rotate(45deg); }
-    to { transform: rotate(405deg); }
-}
-
-.loading-text {
-    font-size: 1.5em;
-    font-weight: bold;
-}
-
 /* Game HUD */
 .hud-content {
     position: absolute;
@@ -508,6 +482,11 @@ body {
         -webkit-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
         text-size-adjust: 100%;
+    }
+    
+    /* Make game canvas full height on mobile */
+    #gameCanvas {
+        height: 100vh !important;
     }
     
     /* Make buttons larger for easier tapping */

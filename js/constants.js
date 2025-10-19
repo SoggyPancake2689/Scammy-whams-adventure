@@ -69,9 +69,7 @@ const CONSTANTS = {
     // Background settings
     BACKGROUND: {
         CLOUD_COUNT: 5,
-        STAR_COUNT: 20,
         CLOUD_SPEED: 0.5,
-        STAR_SPEED: 1.0,
         PARALLAX_FACTOR: 0.3
     },
     

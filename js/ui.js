@@ -36,16 +36,10 @@ class UIManager {
         this.currentScreen = screenName;
     }
 
-    // Show loading screen with animation
-    showLoading(duration = CONSTANTS.UI.LOADING_DURATION) {
-        this.showScreen('loading');
-        
-        // Auto-hide after duration
-        setTimeout(() => {
-            if (this.currentScreen === CONSTANTS.STATES.LOADING) {
-                this.showScreen('gameHUD');
-            }
-        }, duration);
+    // Show loading screen with animation (now instant)
+    showLoading(duration = 0) {
+        // Skip loading screen entirely - go directly to game
+        this.showScreen('gameHUD');
     }
 
 
@@ -148,9 +142,7 @@ class UIManager {
                     
                     // Start game immediately after selecting difficulty
                     this.showLoading();
-                    setTimeout(() => {
-                        game.startGame(this.selectedDifficulty);
-                    }, 500); // Reduced loading time to 0.5 seconds
+                    game.startGame(this.selectedDifficulty);
                 });
             });
         }
@@ -160,9 +152,7 @@ class UIManager {
         if (restartBtn) {
             restartBtn.addEventListener('click', () => {
                 this.showLoading();
-                setTimeout(() => {
-                    game.restart();
-                }, CONSTANTS.UI.LOADING_DURATION);
+                game.restart();
             });
         }
 
@@ -170,9 +160,7 @@ class UIManager {
         if (menuBtn) {
             menuBtn.addEventListener('click', () => {
                 this.showLoading();
-                setTimeout(() => {
-                    game.showMenu();
-                }, CONSTANTS.UI.LOADING_DURATION);
+                game.showMenu();
             });
         }
 
@@ -184,9 +172,7 @@ class UIManager {
                 if (this.currentScreen === 'mainMenuScreen' && this.selectedDifficulty) {
                     // Start game
                     this.showLoading();
-                    setTimeout(() => {
-                        game.startGame(this.selectedDifficulty);
-                    }, CONSTANTS.UI.LOADING_DURATION);
+                    game.startGame(this.selectedDifficulty);
                 } else if (this.currentScreen === 'gameHUD' && (game.state === CONSTANTS.STATES.COUNTDOWN || game.state === CONSTANTS.STATES.PLAYING)) {
                     // Flap diamond during countdown or gameplay
                     console.log('Spacebar pressed - attempting to flap diamond');
@@ -200,9 +186,7 @@ class UIManager {
             if (this.currentScreen === 'mainMenuScreen' && this.selectedDifficulty) {
                 // Start game from menu
                 this.showLoading();
-                setTimeout(() => {
-                    game.startGame(this.selectedDifficulty);
-                }, 500); // Reduced loading time to 0.5 seconds
+                game.startGame(this.selectedDifficulty);
             } else if (this.currentScreen === 'gameHUD' && (game.state === CONSTANTS.STATES.COUNTDOWN || game.state === CONSTANTS.STATES.PLAYING)) {
                 // Flap diamond during countdown or gameplay
                 console.log('Mouse clicked - attempting to flap diamond');
@@ -239,9 +223,7 @@ class UIManager {
                 if (this.currentScreen === 'mainMenuScreen' && this.selectedDifficulty) {
                     // Start game from menu
                     this.showLoading();
-                    setTimeout(() => {
-                        game.startGame(this.selectedDifficulty);
-                    }, 500);
+                    game.startGame(this.selectedDifficulty);
                 } else if (this.currentScreen === 'gameHUD' && (game.state === CONSTANTS.STATES.COUNTDOWN || game.state === CONSTANTS.STATES.PLAYING)) {
                     // Flap diamond during countdown or gameplay
                     console.log('Touch tap - attempting to flap diamond');
