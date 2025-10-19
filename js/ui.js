@@ -186,6 +186,7 @@ class UIManager {
         const backToMenuBtn = document.getElementById('backToMenu');
         if (backToMenuBtn) {
             backToMenuBtn.addEventListener('click', () => {
+                this.clearDifficultySelection();
                 this.showScreen('mainMenu');
             });
         }
@@ -200,6 +201,7 @@ class UIManager {
         const backToMenuFromAchievementsBtn = document.getElementById('backToMenuFromAchievements');
         if (backToMenuFromAchievementsBtn) {
             backToMenuFromAchievementsBtn.addEventListener('click', () => {
+                this.clearDifficultySelection();
                 this.showScreen('mainMenu');
             });
         }
@@ -373,8 +375,18 @@ class UIManager {
         return this.customSettings;
     }
 
+    // Clear difficulty selection
+    clearDifficultySelection() {
+        // Remove selection from all difficulty buttons
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        this.selectedDifficulty = null;
+    }
+
     // Initialize UI
     initialize() {
+        this.clearDifficultySelection();
         this.showScreen('mainMenu');
         scoreStorage.updateHighScoreDisplay();
         this.updateCustomModeLock();
@@ -414,14 +426,18 @@ class UIManager {
             );
         }
         
-        // Check for other achievements
-        const newAchievements = scoreStorage.checkAchievements();
-        newAchievements.forEach(achievement => {
+        // Check for death-based achievements only (score achievements are checked immediately)
+        const achievements = scoreStorage.getAchievements();
+        const deathCount = scoreStorage.getDeathCount();
+        
+        // Check 10 deaths achievement
+        if (deathCount >= 10 && !achievements.deaths_10) {
+            scoreStorage.unlockAchievement('deaths_10');
             this.showAchievementNotification(
                 '🏆 Achievement Unlocked!',
-                `${achievement.title}: ${achievement.description}`
+                '💀 Persistence: Die 10 times'
             );
-        });
+        }
     }
     
     // Show achievement notification
@@ -443,7 +459,7 @@ class UIManager {
         // Add to document
         document.body.appendChild(notification);
 
-        // Remove after 30 seconds
+        // Remove after 5 seconds
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.style.animation = 'achievementSlideOut 0.5s ease-in forwards';
@@ -451,7 +467,7 @@ class UIManager {
                     notification.remove();
                 }, 500);
             }
-        }, 30000);
+        }, 5000);
     }
 
     // Show achievements page
@@ -466,32 +482,137 @@ class UIManager {
         if (!achievementsList) return;
 
         const achievements = [
+            // Easy achievements
             {
-                id: 'deaths_10',
-                icon: '💀',
-                title: 'Persistence',
-                description: 'Die 10 times',
-                unlocked: scoreStorage.isAchievementUnlocked('deaths_10')
+                id: 'getting_started',
+                icon: '⭐',
+                title: 'Getting Started',
+                description: 'Score 5+ points on any difficulty',
+                unlocked: scoreStorage.isAchievementUnlocked('getting_started'),
+                secret: false
             },
+            {
+                id: 'first_steps',
+                icon: '🎮',
+                title: 'First Steps',
+                description: 'Play 5 games total',
+                unlocked: scoreStorage.isAchievementUnlocked('first_steps'),
+                secret: false
+            },
+            {
+                id: 'explorer',
+                icon: '🗺️',
+                title: 'Explorer',
+                description: 'Play on all difficulty levels',
+                unlocked: scoreStorage.isAchievementUnlocked('explorer'),
+                secret: false
+            },
+            // Medium achievements
             {
                 id: 'custom_mode',
                 icon: '🎯',
                 title: 'High Scorer',
                 description: 'Score 20+ points on any difficulty',
-                unlocked: scoreStorage.isAchievementUnlocked('custom_mode')
+                unlocked: scoreStorage.isAchievementUnlocked('custom_mode'),
+                secret: false
+            },
+            {
+                id: 'deaths_10',
+                icon: '💀',
+                title: 'Persistence',
+                description: 'Die 10 times',
+                unlocked: scoreStorage.isAchievementUnlocked('deaths_10'),
+                secret: false
+            },
+            {
+                id: 'skilled_player',
+                icon: '🎯',
+                title: 'Skilled Player',
+                description: 'Score 50+ points on any difficulty',
+                unlocked: scoreStorage.isAchievementUnlocked('skilled_player'),
+                secret: false
+            },
+            {
+                id: 'survivor',
+                icon: '⏱️',
+                title: 'Survivor',
+                description: 'Survive for 60 seconds in one game',
+                unlocked: scoreStorage.isAchievementUnlocked('survivor'),
+                secret: false
+            },
+            {
+                id: 'dedicated',
+                icon: '🏃',
+                title: 'Dedicated',
+                description: 'Play 25 games total',
+                unlocked: scoreStorage.isAchievementUnlocked('dedicated'),
+                secret: false
+            },
+            {
+                id: 'climbing_ranks',
+                icon: '📈',
+                title: 'Climbing the Ranks',
+                description: 'Beat your own high score 3 times',
+                unlocked: scoreStorage.isAchievementUnlocked('climbing_ranks'),
+                secret: false
+            },
+            // Hard achievements
+            {
+                id: 'centurion',
+                icon: '💯',
+                title: 'Centurion',
+                description: 'Score 100+ points on any difficulty',
+                unlocked: scoreStorage.isAchievementUnlocked('centurion'),
+                secret: false
+            },
+            {
+                id: 'hard_mode_master',
+                icon: '💪',
+                title: 'Demon Master',
+                description: 'Score 30+ on Demon difficulty',
+                unlocked: scoreStorage.isAchievementUnlocked('hard_mode_master'),
+                secret: false
+            },
+            // Secret achievements
+            {
+                id: 'speed_runner',
+                icon: '⚡',
+                title: 'Speed Runner (Wrong Way)',
+                description: 'Die within 3 seconds, 5 times total',
+                unlocked: scoreStorage.isAchievementUnlocked('speed_runner'),
+                secret: true
+            },
+            {
+                id: 'the_answer',
+                icon: '🤖',
+                title: 'The Answer',
+                description: 'Score exactly 42 points',
+                unlocked: scoreStorage.isAchievementUnlocked('the_answer'),
+                secret: true
+            },
+            {
+                id: 'completionist',
+                icon: '👑',
+                title: 'Completionist',
+                description: 'Unlock all other achievements',
+                unlocked: scoreStorage.isAchievementUnlocked('completionist'),
+                secret: true
             }
         ];
 
-        achievementsList.innerHTML = achievements.map(achievement => `
-            <div class="achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'}">
-                <span class="achievement-icon">${achievement.icon}</span>
-                <h3 class="achievement-title">${achievement.title}</h3>
-                <p class="achievement-description">${achievement.description}</p>
-                <span class="achievement-status ${achievement.unlocked ? 'unlocked' : 'locked'}">
-                    ${achievement.unlocked ? '✓ Unlocked' : '🔒 Locked'}
-                </span>
-            </div>
-        `).join('');
+        achievementsList.innerHTML = achievements.map(achievement => {
+            const isSecret = achievement.secret && !achievement.unlocked;
+            return `
+                <div class="achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'} ${achievement.secret ? 'secret' : ''}">
+                    <span class="achievement-icon">${isSecret ? '???' : achievement.icon}</span>
+                    <h3 class="achievement-title">${isSecret ? '???' : achievement.title}</h3>
+                    <p class="achievement-description">${isSecret ? 'Secret achievement - unlock to reveal!' : achievement.description}</p>
+                    <span class="achievement-status ${achievement.unlocked ? 'unlocked' : 'locked'}">
+                        ${achievement.unlocked ? '✓ Unlocked' : '🔒 Locked'}
+                    </span>
+                </div>
+            `;
+        }).join('');
     }
 
     // Get current difficulty

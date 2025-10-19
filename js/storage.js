@@ -10,6 +10,11 @@ class ScoreStorage {
         this.unlockKey = 'diamondFlappyCustomUnlocked';
         this.achievementsKey = 'diamondFlappyAchievements';
         this.deathCountKey = 'diamondFlappyDeathCount';
+        this.gamesPlayedKey = 'diamondFlappyGamesPlayed';
+        this.difficultiesPlayedKey = 'diamondFlappyDifficultiesPlayed';
+        this.highScoreBeatStreakKey = 'diamondFlappyHighScoreBeatStreak';
+        this.bestSurvivalTimeKey = 'diamondFlappyBestSurvivalTime';
+        this.quickDeathsKey = 'diamondFlappyQuickDeaths';
     }
 
     // Get all high scores
@@ -96,6 +101,11 @@ class ScoreStorage {
             localStorage.removeItem(this.unlockKey);
             localStorage.removeItem(this.achievementsKey);
             localStorage.removeItem(this.deathCountKey);
+            localStorage.removeItem(this.gamesPlayedKey);
+            localStorage.removeItem(this.difficultiesPlayedKey);
+            localStorage.removeItem(this.highScoreBeatStreakKey);
+            localStorage.removeItem(this.bestSurvivalTimeKey);
+            localStorage.removeItem(this.quickDeathsKey);
             this.updateHighScoreDisplay();
         } catch (error) {
             console.warn('Error clearing high scores:', error);
@@ -182,6 +192,313 @@ class ScoreStorage {
         }
 
         return newAchievements;
+    }
+
+    // Check achievements immediately when score is updated
+    checkAchievementsOnScoreUpdate(difficulty, score) {
+        const achievements = this.getAchievements();
+        const newAchievements = [];
+
+        // Check high scorer achievement immediately when score reaches 20+
+        if (score >= 20 && !achievements.custom_mode) {
+            this.unlockAchievement('custom_mode');
+            newAchievements.push({
+                id: 'custom_mode',
+                title: '🎯 High Scorer',
+                description: 'Score 20+ points on any difficulty'
+            });
+        }
+
+        // Check getting started achievement (5+ points)
+        if (score >= 5 && !achievements.getting_started) {
+            this.unlockAchievement('getting_started');
+            newAchievements.push({
+                id: 'getting_started',
+                title: '⭐ Getting Started',
+                description: 'Score 5+ points on any difficulty'
+            });
+        }
+
+        // Check skilled player achievement (50+ points)
+        if (score >= 50 && !achievements.skilled_player) {
+            this.unlockAchievement('skilled_player');
+            newAchievements.push({
+                id: 'skilled_player',
+                title: '🎯 Skilled Player',
+                description: 'Score 50+ points on any difficulty'
+            });
+        }
+
+        // Check centurion achievement (100+ points)
+        if (score >= 100 && !achievements.centurion) {
+            this.unlockAchievement('centurion');
+            newAchievements.push({
+                id: 'centurion',
+                title: '💯 Centurion',
+                description: 'Score 100+ points on any difficulty'
+            });
+        }
+
+        // Check the answer achievement (exactly 42 points)
+        if (score === 42 && !achievements.the_answer) {
+            this.unlockAchievement('the_answer');
+            newAchievements.push({
+                id: 'the_answer',
+                title: '🤖 The Answer',
+                description: 'Score exactly 42 points'
+            });
+        }
+
+        // Check hard mode master achievement (30+ on hard)
+        if (difficulty === 'hard' && score >= 30 && !achievements.hard_mode_master) {
+            this.unlockAchievement('hard_mode_master');
+            newAchievements.push({
+                id: 'hard_mode_master',
+                title: '💪 Demon Master',
+                description: 'Score 30+ on Demon difficulty'
+            });
+        }
+
+        return newAchievements;
+    }
+
+    // Games played tracking
+    getGamesPlayed() {
+        try {
+            const stored = localStorage.getItem(this.gamesPlayedKey);
+            return stored ? parseInt(stored) : 0;
+        } catch (error) {
+            console.warn('Error loading games played:', error);
+            return 0;
+        }
+    }
+
+    incrementGamesPlayed() {
+        try {
+            const currentCount = this.getGamesPlayed();
+            const newCount = currentCount + 1;
+            localStorage.setItem(this.gamesPlayedKey, newCount.toString());
+            return newCount;
+        } catch (error) {
+            console.warn('Error incrementing games played:', error);
+            return 0;
+        }
+    }
+
+    // Difficulty tracking
+    getDifficultiesPlayed() {
+        try {
+            const stored = localStorage.getItem(this.difficultiesPlayedKey);
+            return stored ? JSON.parse(stored) : [];
+        } catch (error) {
+            console.warn('Error loading difficulties played:', error);
+            return [];
+        }
+    }
+
+    recordDifficultyPlayed(difficulty) {
+        try {
+            const difficulties = this.getDifficultiesPlayed();
+            if (!difficulties.includes(difficulty)) {
+                difficulties.push(difficulty);
+                localStorage.setItem(this.difficultiesPlayedKey, JSON.stringify(difficulties));
+            }
+        } catch (error) {
+            console.warn('Error recording difficulty played:', error);
+        }
+    }
+
+    hasPlayedAllDifficulties() {
+        const difficulties = this.getDifficultiesPlayed();
+        return ['easy', 'normal', 'hard', 'custom'].every(d => difficulties.includes(d));
+    }
+
+    // High score beat streak tracking
+    getHighScoreBeatStreak() {
+        try {
+            const stored = localStorage.getItem(this.highScoreBeatStreakKey);
+            return stored ? parseInt(stored) : 0;
+        } catch (error) {
+            console.warn('Error loading high score beat streak:', error);
+            return 0;
+        }
+    }
+
+    incrementHighScoreBeatStreak() {
+        try {
+            const currentStreak = this.getHighScoreBeatStreak();
+            const newStreak = currentStreak + 1;
+            localStorage.setItem(this.highScoreBeatStreakKey, newStreak.toString());
+            return newStreak;
+        } catch (error) {
+            console.warn('Error incrementing high score beat streak:', error);
+            return 0;
+        }
+    }
+
+    resetHighScoreBeatStreak() {
+        try {
+            localStorage.setItem(this.highScoreBeatStreakKey, '0');
+        } catch (error) {
+            console.warn('Error resetting high score beat streak:', error);
+        }
+    }
+
+    // Survival time tracking
+    getBestSurvivalTime() {
+        try {
+            const stored = localStorage.getItem(this.bestSurvivalTimeKey);
+            return stored ? parseFloat(stored) : 0;
+        } catch (error) {
+            console.warn('Error loading best survival time:', error);
+            return 0;
+        }
+    }
+
+    recordSurvivalTime(time) {
+        try {
+            const bestTime = this.getBestSurvivalTime();
+            if (time > bestTime) {
+                localStorage.setItem(this.bestSurvivalTimeKey, time.toString());
+            }
+        } catch (error) {
+            console.warn('Error recording survival time:', error);
+        }
+    }
+
+    // Quick death tracking
+    getQuickDeathCount() {
+        try {
+            const stored = localStorage.getItem(this.quickDeathsKey);
+            return stored ? parseInt(stored) : 0;
+        } catch (error) {
+            console.warn('Error loading quick death count:', error);
+            return 0;
+        }
+    }
+
+    incrementQuickDeath() {
+        try {
+            const currentCount = this.getQuickDeathCount();
+            const newCount = currentCount + 1;
+            localStorage.setItem(this.quickDeathsKey, newCount.toString());
+            return newCount;
+        } catch (error) {
+            console.warn('Error incrementing quick death count:', error);
+            return 0;
+        }
+    }
+
+    // Check achievements on game start
+    checkAchievementsOnGameStart() {
+        const achievements = this.getAchievements();
+        const newAchievements = [];
+        const gamesPlayed = this.getGamesPlayed();
+
+        // Check first steps achievement (5 games)
+        if (gamesPlayed >= 5 && !achievements.first_steps) {
+            this.unlockAchievement('first_steps');
+            newAchievements.push({
+                id: 'first_steps',
+                title: '🎮 First Steps',
+                description: 'Play 5 games total'
+            });
+        }
+
+        // Check dedicated achievement (25 games)
+        if (gamesPlayed >= 25 && !achievements.dedicated) {
+            this.unlockAchievement('dedicated');
+            newAchievements.push({
+                id: 'dedicated',
+                title: '🏃 Dedicated',
+                description: 'Play 25 games total'
+            });
+        }
+
+        // Check explorer achievement (all difficulties)
+        if (this.hasPlayedAllDifficulties() && !achievements.explorer) {
+            this.unlockAchievement('explorer');
+            newAchievements.push({
+                id: 'explorer',
+                title: '🗺️ Explorer',
+                description: 'Play on all difficulty levels'
+            });
+        }
+
+        return newAchievements;
+    }
+
+    // Check achievements on game over
+    checkAchievementsOnGameOver(survivalTime, wasQuickDeath, isNewHighScore) {
+        const achievements = this.getAchievements();
+        const newAchievements = [];
+
+        // Check survivor achievement (60+ seconds)
+        if (survivalTime >= 60 && !achievements.survivor) {
+            this.unlockAchievement('survivor');
+            newAchievements.push({
+                id: 'survivor',
+                title: '⏱️ Survivor',
+                description: 'Survive for 60 seconds in one game'
+            });
+        }
+
+        // Check quick death achievement (5 deaths within 3 seconds)
+        if (wasQuickDeath) {
+            const quickDeaths = this.getQuickDeathCount();
+            if (quickDeaths >= 5 && !achievements.speed_runner) {
+                this.unlockAchievement('speed_runner');
+                newAchievements.push({
+                    id: 'speed_runner',
+                    title: '⚡ Speed Runner (Wrong Way)',
+                    description: 'Die within 3 seconds, 5 times total'
+                });
+            }
+        }
+
+        // Check high score beat streak achievement
+        if (isNewHighScore) {
+            const streak = this.incrementHighScoreBeatStreak();
+            if (streak >= 3 && !achievements.climbing_ranks) {
+                this.unlockAchievement('climbing_ranks');
+                newAchievements.push({
+                    id: 'climbing_ranks',
+                    title: '📈 Climbing the Ranks',
+                    description: 'Beat your own high score 3 times'
+                });
+            }
+        } else {
+            this.resetHighScoreBeatStreak();
+        }
+
+        // Check completionist achievement (all others unlocked)
+        this.checkCompletionistAchievement(newAchievements);
+
+        return newAchievements;
+    }
+
+    // Check if all other achievements are unlocked for completionist
+    checkCompletionistAchievement(newAchievements) {
+        const achievements = this.getAchievements();
+        
+        if (achievements.completionist) return; // Already unlocked
+
+        const requiredAchievements = [
+            'deaths_10', 'custom_mode', 'getting_started', 'skilled_player',
+            'centurion', 'the_answer', 'hard_mode_master', 'first_steps',
+            'dedicated', 'explorer', 'survivor', 'speed_runner', 'climbing_ranks'
+        ];
+
+        const allUnlocked = requiredAchievements.every(id => achievements[id]);
+
+        if (allUnlocked) {
+            this.unlockAchievement('completionist');
+            newAchievements.push({
+                id: 'completionist',
+                title: '👑 Completionist',
+                description: 'Unlock all other achievements'
+            });
+        }
     }
 }
 

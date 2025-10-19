@@ -152,6 +152,21 @@ class Game {
         // Reset game state
         this.score = 0;
         this.gameStarted = false;
+        this.gameStartTime = Date.now();
+        this.survivalTime = 0;
+        
+        // Track games played and difficulty
+        scoreStorage.incrementGamesPlayed();
+        scoreStorage.recordDifficultyPlayed(difficultyName);
+        
+        // Check game start achievements
+        const newAchievements = scoreStorage.checkAchievementsOnGameStart();
+        newAchievements.forEach(achievement => {
+            this.ui.showAchievementNotification(
+                '🏆 Achievement Unlocked!',
+                `${achievement.title}: ${achievement.description}`
+            );
+        });
         
         // Create diamond in center of screen
         this.diamond = new Diamond(150, CONSTANTS.CANVAS_HEIGHT / 2);
@@ -178,6 +193,7 @@ class Game {
     showMenu() {
         this.state = CONSTANTS.STATES.MENU;
         this.gameStarted = false;
+        this.ui.clearDifficultySelection();
         this.ui.showScreen('mainMenu');
         scoreStorage.updateHighScoreDisplay();
     }
@@ -216,8 +232,18 @@ class Game {
         this.state = CONSTANTS.STATES.GAME_OVER;
         this.gameStarted = false;
         
-        // Increment death count for achievements
+        // Calculate survival time
+        const survivalTime = (Date.now() - this.gameStartTime) / 1000; // in seconds
+        this.survivalTime = survivalTime;
+        const wasQuickDeath = survivalTime < 3;
+        
+        // Track death and survival time
         scoreStorage.incrementDeathCount();
+        scoreStorage.recordSurvivalTime(survivalTime);
+        
+        if (wasQuickDeath) {
+            scoreStorage.incrementQuickDeath();
+        }
         
         // Create impact particles
         if (this.diamond) {
@@ -228,8 +254,17 @@ class Game {
         // Check for new high score
         const isNewHighScore = scoreStorage.saveHighScore(this.currentDifficulty.name, this.score);
         
-        // Check for custom mode unlock
+        // Check for custom mode unlock and death-based achievements
         this.ui.checkCustomModeUnlock();
+        
+        // Check game over achievements
+        const gameOverAchievements = scoreStorage.checkAchievementsOnGameOver(survivalTime, wasQuickDeath, isNewHighScore);
+        gameOverAchievements.forEach(achievement => {
+            this.ui.showAchievementNotification(
+                '🏆 Achievement Unlocked!',
+                `${achievement.title}: ${achievement.description}`
+            );
+        });
         
         // Show game over screen
         this.ui.showGameOver(this.score, isNewHighScore);
@@ -287,6 +322,17 @@ class Game {
             // Update score
             this.score = this.obstacleManager.getTotalScore();
             this.ui.updateScore(this.score);
+            
+            // Check for achievements immediately when score reaches 20+
+            if (this.score >= 20) {
+                const newAchievements = scoreStorage.checkAchievementsOnScoreUpdate(this.currentDifficulty.name, this.score);
+                newAchievements.forEach(achievement => {
+                    this.ui.showAchievementNotification(
+                        '🏆 Achievement Unlocked!',
+                        `${achievement.title}: ${achievement.description}`
+                    );
+                });
+            }
         }
         
         // Always update background and particles (these continue during countdown)

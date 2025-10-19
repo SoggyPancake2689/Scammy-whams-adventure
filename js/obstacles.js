@@ -1,11 +1,31 @@
 // Obstacle system with themed variants
 class Obstacle {
-    constructor(x, theme, gapSize) {
+    constructor(x, theme, gapSize, difficulty = 'normal') {
         this.x = x;
         this.theme = theme;
         this.width = CONSTANTS.OBSTACLE.WIDTH;
         this.gapSize = gapSize;
-        this.gapY = CONSTANTS.CANVAS_HEIGHT / 2; // Always center the gap
+        
+        // Add difficulty-based randomness to gap position
+        const baseCenterY = CONSTANTS.CANVAS_HEIGHT / 2;
+        
+        // Difficulty-based variation multipliers
+        const difficultyMultipliers = {
+            'easy': 0.2,      // 20% of max variation (minimal gaps)
+            'normal': 0.5,    // 50% of max variation (moderate gaps)
+            'hard': 1.0,      // 100% of max variation (maximum gaps - very hard)
+            'custom': 0.5     // 50% for custom (uses normal as base)
+        };
+        
+        const baseMaxOffset = Math.min(80, (CONSTANTS.CANVAS_HEIGHT - gapSize) / 4);
+        const multiplier = difficultyMultipliers[difficulty] || 0.6;
+        const maxOffset = baseMaxOffset * multiplier;
+        
+        // Randomize centerY based on difficulty multiplier
+        const centerYVariation = (Math.random() - 0.5) * maxOffset;
+        const centerY = baseCenterY + centerYVariation;
+        
+        this.gapY = centerY + (Math.random() - 0.5) * maxOffset;
         
         // Ensure gap stays within bounds
         this.gapY = Math.max(
@@ -18,6 +38,21 @@ class Obstacle {
         
         this.topHeight = this.gapY - gapSize / 2;
         this.bottomY = this.gapY + gapSize / 2;
+        
+        // Add random height variation to bottom obstacle
+        const maxHeightVariation = 100; // Maximum pixels to vary bottom height
+        const heightVariation = (Math.random() - 0.5) * maxHeightVariation;
+        this.bottomY += heightVariation;
+        
+        // Ensure bottom obstacle stays within bounds
+        this.bottomY = Math.max(
+            this.gapY + gapSize / 2, // Don't go above the gap
+            Math.min(
+                CONSTANTS.CANVAS_HEIGHT - CONSTANTS.OBSTACLE.MIN_HEIGHT, // Don't go below minimum height
+                this.bottomY
+            )
+        );
+        
         this.bottomHeight = CONSTANTS.CANVAS_HEIGHT - this.bottomY;
         
         this.colors = CONSTANTS.COLORS.OBSTACLE_COLORS[theme];
@@ -367,7 +402,8 @@ class ObstacleManager {
 
     spawnObstacle() {
         const theme = CONSTANTS.OBSTACLE.THEMES[Math.floor(Math.random() * CONSTANTS.OBSTACLE.THEMES.length)];
-        const obstacle = new Obstacle(CONSTANTS.CANVAS_WIDTH, theme, this.currentDifficulty.gapSize);
+        const difficulty = this.currentDifficulty.name || 'normal';
+        const obstacle = new Obstacle(CONSTANTS.CANVAS_WIDTH, theme, this.currentDifficulty.gapSize, difficulty);
         this.obstacles.push(obstacle);
     }
 
