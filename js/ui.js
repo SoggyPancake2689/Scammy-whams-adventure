@@ -48,6 +48,7 @@ class UIManager {
         }, duration);
     }
 
+
     // Start countdown
     startCountdown() {
         console.log('Starting countdown...');

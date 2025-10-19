@@ -78,7 +78,7 @@ const CONSTANTS = {
     // UI settings
     UI: {
         COUNTDOWN_DURATION: 3000,
-        LOADING_DURATION: 1000,
+        LOADING_DURATION: 120000, // Increased to 120 seconds (2 minutes) for maximum reading time
         FADE_DURATION: 500
     },
     
