@@ -221,9 +221,20 @@ class Obstacle {
     }
 
     drawRGBBlock(ctx, x, y, width, height) {
-        // Draw RGB cycling rectangle
-        const currentColor = this.colors[this.colorIndex];
-        ctx.fillStyle = currentColor;
+        // Calculate smooth color transition
+        const progress = this.colorTime / this.colorSpeed; // 0 to 1
+        const currentColorIndex = this.colorIndex;
+        const nextColorIndex = (this.colorIndex + 1) % this.colors.length;
+        
+        // Get current and next colors
+        const currentColor = this.colors[currentColorIndex];
+        const nextColor = this.colors[nextColorIndex];
+        
+        // Interpolate between colors for smooth transition
+        const interpolatedColor = this.interpolateColor(currentColor, nextColor, progress);
+        
+        // Draw main rectangle with interpolated color
+        ctx.fillStyle = interpolatedColor;
         ctx.fillRect(x, y, width, height);
         
         // Add outline for better visibility
@@ -231,14 +242,40 @@ class Obstacle {
         ctx.lineWidth = 2;
         ctx.strokeRect(x, y, width, height);
         
-        // Add glow effect for RGB blocks
-        ctx.shadowColor = currentColor;
+        // Add glow effect for RGB blocks with interpolated color
+        ctx.shadowColor = interpolatedColor;
         ctx.shadowBlur = 10;
-        ctx.fillStyle = currentColor;
+        ctx.fillStyle = interpolatedColor;
         ctx.fillRect(x - 2, y - 2, width + 4, height + 4);
         
         // Reset shadow
         ctx.shadowBlur = 0;
+    }
+    
+    interpolateColor(color1, color2, progress) {
+        // Parse hex colors to RGB
+        const rgb1 = this.hexToRgb(color1);
+        const rgb2 = this.hexToRgb(color2);
+        
+        // Interpolate each component
+        const r = Math.round(rgb1.r + (rgb2.r - rgb1.r) * progress);
+        const g = Math.round(rgb1.g + (rgb2.g - rgb1.g) * progress);
+        const b = Math.round(rgb1.b + (rgb2.b - rgb1.b) * progress);
+        
+        // Convert back to hex
+        return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    }
+    
+    hexToRgb(hex) {
+        // Remove # if present
+        hex = hex.replace('#', '');
+        
+        // Parse hex to RGB
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        
+        return { r, g, b };
     }
 
     drawRectangle(ctx, x, y, width, height) {
