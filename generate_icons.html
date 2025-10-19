@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <canvas id="canvas" width="512" height="512" style="border: 1px solid #ccc;"></canvas>
+    <br><br>
+    <button onclick="generateIcons()">Generate Icons</button>
+    <div id="downloads"></div>
+
+    <script>
+        function generateIcons() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, 512, 512);
+            
+            // Draw diamond icon
+            const centerX = 256;
+            const centerY = 256;
+            const size = 400;
+            
+            // Background circle
+            ctx.fillStyle = '#1a1a2e';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 240, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Diamond gradient
+            const gradient = ctx.createLinearGradient(centerX - size/2, centerY - size/2, centerX + size/2, centerY + size/2);
+            gradient.addColorStop(0, '#FFD700');
+            gradient.addColorStop(0.5, '#FFA500');
+            gradient.addColorStop(1, '#FF8C00');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY - size/2);
+            ctx.lineTo(centerX + size/2, centerY);
+            ctx.lineTo(centerX, centerY + size/2);
+            ctx.lineTo(centerX - size/2, centerY);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Add outline
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+            
+            // Add highlight
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.beginPath();
+            ctx.moveTo(centerX - size/6, centerY - size/6);
+            ctx.lineTo(centerX + size/6, centerY - size/6);
+            ctx.lineTo(centerX, centerY + size/6);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Generate downloads for each size
+            sizes.forEach(size => {
+                const newCanvas = document.createElement('canvas');
+                newCanvas.width = size;
+                newCanvas.height = size;
+                const newCtx = newCanvas.getContext('2d');
+                
+                // Draw scaled version
+                newCtx.drawImage(canvas, 0, 0, 512, 512, 0, 0, size, size);
+                
+                // Create download link
+                newCanvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `icon-${size}x${size}.png`;
+                    link.textContent = `Download ${size}x${size}`;
+                    link.style.display = 'block';
+                    link.style.margin = '5px';
+                    document.getElementById('downloads').appendChild(link);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

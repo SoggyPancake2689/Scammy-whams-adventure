@@ -625,6 +625,101 @@ class UIManager {
         this.showScreen('mainMenu');
         scoreStorage.updateHighScoreDisplay();
         this.updateCustomModeLock();
+        this.initializePWA();
+    }
+
+    // Initialize PWA features
+    initializePWA() {
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registered successfully:', registration);
+                })
+                .catch((error) => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+
+        // Handle install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('PWA install prompt triggered');
+            e.preventDefault();
+            deferredPrompt = e;
+            this.showInstallButton(deferredPrompt);
+        });
+
+        // Handle app installed
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            this.hideInstallButton();
+        });
+    }
+
+    // Show install button
+    showInstallButton(deferredPrompt) {
+        // Check if install button already exists
+        if (document.getElementById('installBtn')) return;
+
+        const installBtn = document.createElement('button');
+        installBtn.id = 'installBtn';
+        installBtn.className = 'btn primary-btn install-btn';
+        installBtn.innerHTML = '📱 Install App';
+        installBtn.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            animation: installPulse 2s infinite;
+        `;
+
+        installBtn.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                    this.hideInstallButton();
+                });
+            }
+        });
+
+        document.body.appendChild(installBtn);
+
+        // Add CSS animation
+        if (!document.getElementById('installAnimation')) {
+            const style = document.createElement('style');
+            style.id = 'installAnimation';
+            style.textContent = `
+                @keyframes installPulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+
+    // Hide install button
+    hideInstallButton() {
+        const installBtn = document.getElementById('installBtn');
+        if (installBtn) {
+            installBtn.remove();
+        }
     }
     
     // Update custom mode lock status
