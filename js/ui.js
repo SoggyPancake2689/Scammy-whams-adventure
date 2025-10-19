@@ -122,14 +122,25 @@ class UIManager {
             }
         }
         
-        // Show/hide Change Settings button based on current difficulty
+        // Show/lock Change Settings button based on Custom Mode unlock
         const changeSettingsBtn = document.getElementById('changeSettingsBtn');
         if (changeSettingsBtn) {
             const isCustomMode = this.selectedDifficulty === 'custom';
-            if (isCustomMode) {
+            const isUnlocked = scoreStorage.isCustomModeUnlocked();
+
+            // Reset base state first
+            changeSettingsBtn.classList.remove('locked');
+            changeSettingsBtn.classList.add('hidden');
+            changeSettingsBtn.textContent = 'Change Settings';
+
+            if (isUnlocked && isCustomMode) {
+                // Only enable button if Custom Mode is unlocked and last game was custom
                 changeSettingsBtn.classList.remove('hidden');
-            } else {
-                changeSettingsBtn.classList.add('hidden');
+            } else if (!isUnlocked) {
+                // If not unlocked, show the button in a locked state
+                changeSettingsBtn.classList.remove('hidden');
+                changeSettingsBtn.classList.add('locked');
+                changeSettingsBtn.innerHTML = 'Change Settings <span class="lock-icon">🔒</span>';
             }
         }
         
@@ -296,7 +307,13 @@ class UIManager {
 
         const changeSettingsBtn = document.getElementById('changeSettingsBtn');
         if (changeSettingsBtn) {
-            const handleChangeSettings = () => {
+            const handleChangeSettings = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!scoreStorage.isCustomModeUnlocked()) {
+                    this.showLockedMessage();
+                    return;
+                }
                 this.showCustomSettings();
             };
             changeSettingsBtn.addEventListener('click', handleChangeSettings);
