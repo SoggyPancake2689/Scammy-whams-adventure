@@ -54,8 +54,6 @@ class ParticleSystem {
 
     // Trail particles removed - no longer needed
 
-    // Continuous trail particles removed - no longer needed
-
     // Create impact particles on collision
     createImpact(x, y) {
         const count = CONSTANTS.PARTICLES.IMPACT_COUNT;

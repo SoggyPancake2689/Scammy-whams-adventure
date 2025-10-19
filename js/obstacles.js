@@ -22,10 +22,24 @@ class Obstacle {
         
         this.colors = CONSTANTS.COLORS.OBSTACLE_COLORS[theme];
         this.passed = false;
+        
+        // RGB animation properties
+        this.colorIndex = 0;
+        this.colorTime = 0;
+        this.colorSpeed = 0.3; // Color change speed (seconds per color)
     }
 
     update(deltaTime, speed) {
         this.x -= speed * deltaTime;
+        
+        // Update RGB color animation
+        if (this.theme === 'rgb') {
+            this.colorTime += deltaTime;
+            if (this.colorTime >= this.colorSpeed) {
+                this.colorTime = 0;
+                this.colorIndex = (this.colorIndex + 1) % this.colors.length;
+            }
+        }
     }
 
     draw(ctx) {
@@ -69,10 +83,16 @@ class Obstacle {
                 this.drawBuilding(ctx, x, y, width, height);
                 break;
             case 'grass':
-                this.drawGrass(ctx, x, y, width, height);
+                this.drawGrassBlock(ctx, x, y, width, height, isTop);
+                break;
+            case 'rainbow':
+                this.drawRainbowBlock(ctx, x, y, width, height);
+                break;
+            case 'rgb':
+                this.drawRGBBlock(ctx, x, y, width, height);
                 break;
             default:
-                this.drawPipe(ctx, x, y, width, height, isTop);
+                this.drawRectangle(ctx, x, y, width, height);
         }
         
         // Add shadow
@@ -101,175 +121,134 @@ class Obstacle {
                 this.drawBuilding(ctx, x, y, width, height);
                 break;
             case 'grass':
-                this.drawGrass(ctx, x, y, width, height);
+                this.drawGrassBlock(ctx, x, y, width, height, isTop);
+                break;
+            case 'rainbow':
+                this.drawRainbowBlock(ctx, x, y, width, height);
+                break;
+            case 'rgb':
+                this.drawRGBBlock(ctx, x, y, width, height);
                 break;
         }
     }
 
     drawPipe(ctx, x, y, width, height, isTop) {
-        // Draw pipe with rounded edges
-        ctx.beginPath();
-        if (ctx.roundRect) {
-            ctx.roundRect(x, y, width, height, 10);
-        } else {
-            // Fallback for browsers without roundRect
-            ctx.rect(x, y, width, height);
-        }
-        ctx.fill();
+        // Draw simple rectangle
+        ctx.fillRect(x, y, width, height);
         
         // Add outline for better visibility
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
-        ctx.stroke();
-        
-        // Add pipe cap
-        ctx.fillStyle = this.colors[1];
-        ctx.beginPath();
-        if (ctx.roundRect) {
-            ctx.roundRect(x - 5, isTop ? y + height - 15 : y, width + 10, 15, 5);
-        } else {
-            ctx.rect(x - 5, isTop ? y + height - 15 : y, width + 10, 15);
-        }
-        ctx.fill();
-        
-        // Add outline to cap
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        ctx.strokeRect(x, y, width, height);
     }
 
     drawRock(ctx, x, y, width, height) {
-        // Draw irregular rock shape
-        ctx.beginPath();
-        ctx.moveTo(x, y + height * 0.2);
-        ctx.lineTo(x + width * 0.3, y);
-        ctx.lineTo(x + width * 0.7, y + height * 0.1);
-        ctx.lineTo(x + width, y + height * 0.3);
-        ctx.lineTo(x + width * 0.8, y + height);
-        ctx.lineTo(x + width * 0.2, y + height * 0.9);
-        ctx.lineTo(x, y + height);
-        ctx.closePath();
-        ctx.fill();
+        // Draw simple rectangle
+        ctx.fillRect(x, y, width, height);
         
         // Add outline for better visibility
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
-        ctx.stroke();
+        ctx.strokeRect(x, y, width, height);
     }
 
     drawCrystal(ctx, x, y, width, height) {
-        // Draw crystal shape
-        ctx.beginPath();
-        ctx.moveTo(x + width / 2, y);
-        ctx.lineTo(x + width, y + height * 0.3);
-        ctx.lineTo(x + width * 0.8, y + height);
-        ctx.lineTo(x + width * 0.2, y + height);
-        ctx.lineTo(x, y + height * 0.3);
-        ctx.closePath();
-        ctx.fill();
+        // Draw simple rectangle
+        ctx.fillRect(x, y, width, height);
         
         // Add outline for better visibility
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
-        ctx.stroke();
-        
-        // Add crystal highlight
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.beginPath();
-        ctx.moveTo(x + width / 2, y);
-        ctx.lineTo(x + width * 0.6, y + height * 0.3);
-        ctx.lineTo(x + width * 0.5, y + height);
-        ctx.lineTo(x + width * 0.3, y + height * 0.3);
-        ctx.closePath();
-        ctx.fill();
+        ctx.strokeRect(x, y, width, height);
     }
 
     drawLaser(ctx, x, y, width, height) {
-        // Draw laser beam
+        // Draw simple rectangle
         ctx.fillRect(x, y, width, height);
         
         // Add outline for better visibility
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
         ctx.strokeRect(x, y, width, height);
-        
-        // Add laser glow
-        ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
-        ctx.fillRect(x - 5, y, width + 10, height);
     }
 
     drawThorns(ctx, x, y, width, height) {
-        // Draw thorny shape
-        ctx.beginPath();
-        ctx.moveTo(x, y + height);
-        for (let i = 0; i < 5; i++) {
-            const spikeX = x + (width / 4) * i;
-            const spikeY = y + (i % 2 === 0 ? 0 : height * 0.3);
-            ctx.lineTo(spikeX, spikeY);
-        }
-        ctx.lineTo(x + width, y + height);
-        ctx.closePath();
-        ctx.fill();
+        // Draw simple rectangle
+        ctx.fillRect(x, y, width, height);
         
         // Add outline for better visibility
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
-        ctx.stroke();
+        ctx.strokeRect(x, y, width, height);
     }
 
     drawBuilding(ctx, x, y, width, height) {
-        // Draw building with windows
+        // Draw simple rectangle
         ctx.fillRect(x, y, width, height);
         
         // Add outline for better visibility
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
         ctx.strokeRect(x, y, width, height);
-        
-        // Add windows
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-        const windowSize = 8;
-        const windowSpacing = 15;
-        
-        for (let wy = y + 10; wy < y + height - 10; wy += windowSpacing) {
-            for (let wx = x + 10; wx < x + width - 10; wx += windowSpacing) {
-                ctx.fillRect(wx, wy, windowSize, windowSize);
-            }
-        }
     }
 
-    drawGrass(ctx, x, y, width, height) {
-        // Draw Minecraft-style grass block
-        // Main block (dirt brown)
-        ctx.fillStyle = '#8B4513'; // Brown dirt color
+    drawGrassBlock(ctx, x, y, width, height, isTop) {
+        // Draw simple rectangle
         ctx.fillRect(x, y, width, height);
         
-        // Grass top (green)
-        const grassHeight = Math.min(15, height * 0.2); // Grass takes up top 20% or 15px max
-        ctx.fillStyle = '#32CD32'; // Bright green grass
-        ctx.fillRect(x, y, width, grassHeight);
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, width, height);
+    }
+
+    drawRainbowBlock(ctx, x, y, width, height) {
+        // Draw rainbow gradient rectangle
+        const gradient = ctx.createLinearGradient(x, y, x + width, y);
+        const colors = this.colors; // Rainbow colors array
         
-        // Add grass texture (small green squares)
-        ctx.fillStyle = '#228B22'; // Darker green for texture
-        const grassSize = 4;
-        const grassSpacing = 8;
-        
-        for (let gy = y; gy < y + grassHeight; gy += grassSpacing) {
-            for (let gx = x; gx < x + width; gx += grassSpacing) {
-                if (Math.random() < 0.3) { // 30% chance for grass texture
-                    ctx.fillRect(gx + Math.random() * 4, gy + Math.random() * 4, grassSize, grassSize);
-                }
-            }
+        for (let i = 0; i < colors.length; i++) {
+            gradient.addColorStop(i / (colors.length - 1), colors[i]);
         }
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x, y, width, height);
+        
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, width, height);
+    }
+
+    drawRGBBlock(ctx, x, y, width, height) {
+        // Draw RGB cycling rectangle
+        const currentColor = this.colors[this.colorIndex];
+        ctx.fillStyle = currentColor;
+        ctx.fillRect(x, y, width, height);
         
         // Add outline for better visibility
         ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
         ctx.strokeRect(x, y, width, height);
         
-        // Add some pixelated edges to make it look more Minecraft-like
-        ctx.fillStyle = '#654321'; // Darker brown for edges
-        ctx.fillRect(x, y + grassHeight, width, 2); // Edge between grass and dirt
+        // Add glow effect for RGB blocks
+        ctx.shadowColor = currentColor;
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = currentColor;
+        ctx.fillRect(x - 2, y - 2, width + 4, height + 4);
+        
+        // Reset shadow
+        ctx.shadowBlur = 0;
+    }
+
+    drawRectangle(ctx, x, y, width, height) {
+        // Generic rectangle drawing method
+        ctx.fillRect(x, y, width, height);
+        
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, width, height);
     }
 
     isOffScreen() {

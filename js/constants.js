@@ -53,7 +53,7 @@ const CONSTANTS = {
         WIDTH: 80,
         MIN_HEIGHT: 50,
         MAX_HEIGHT: 300,
-        THEMES: ['pipes', 'rocks', 'crystals', 'lasers', 'thorns', 'buildings', 'grass']
+        THEMES: ['pipes', 'rocks', 'crystals', 'lasers', 'thorns', 'buildings', 'grass', 'rainbow', 'rgb']
     },
     
     // Particle settings
@@ -96,7 +96,9 @@ const CONSTANTS = {
             lasers: ['#FF4500', '#FF6347'],
             thorns: ['#CD853F', '#DEB887'],
             buildings: ['#708090', '#A9A9A9'],
-            grass: ['#90EE90', '#32CD32', '#228B22']
+            grass: ['#7CB342', '#8BC34A'],
+            rainbow: ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'],
+            rgb: ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3']
         },
         PARTICLE_COLORS: ['#FFD700', '#FFA500', '#FF6347', '#FF69B4']
     }

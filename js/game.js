@@ -238,8 +238,6 @@ class Game {
                 this.diamond.updateVisuals(deltaTime);
             }
             
-            // Trail particles removed - no longer needed
-            
             // Only check collisions during actual gameplay (not during countdown)
             if (this.state === CONSTANTS.STATES.PLAYING) {
                 // Check collision with obstacles
