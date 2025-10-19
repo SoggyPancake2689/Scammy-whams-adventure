@@ -144,7 +144,8 @@ class UIManager {
             console.warn('No difficulty buttons found!');
         } else {
             difficultyButtons.forEach(btn => {
-                btn.addEventListener('click', (e) => {
+                // Handle both click and touch events for mobile compatibility
+                const handleDifficultySelection = (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     
@@ -170,64 +171,82 @@ class UIManager {
                         this.showLoading();
                         game.startGame(this.selectedDifficulty);
                     }
-                });
+                };
+                
+                // Add both click and touch event listeners
+                btn.addEventListener('click', handleDifficultySelection);
+                btn.addEventListener('touchend', handleDifficultySelection);
             });
         }
 
         // Custom settings buttons
         const startCustomGameBtn = document.getElementById('startCustomGame');
         if (startCustomGameBtn) {
-            startCustomGameBtn.addEventListener('click', () => {
+            const handleStartCustom = () => {
                 this.showLoading();
                 game.startGame('custom');
-            });
+            };
+            startCustomGameBtn.addEventListener('click', handleStartCustom);
+            startCustomGameBtn.addEventListener('touchend', handleStartCustom);
         }
 
         const backToMenuBtn = document.getElementById('backToMenu');
         if (backToMenuBtn) {
-            backToMenuBtn.addEventListener('click', () => {
+            const handleBackToMenu = () => {
                 this.clearDifficultySelection();
                 this.showScreen('mainMenu');
-            });
+            };
+            backToMenuBtn.addEventListener('click', handleBackToMenu);
+            backToMenuBtn.addEventListener('touchend', handleBackToMenu);
         }
 
         const achievementsBtn = document.getElementById('achievementsBtn');
         if (achievementsBtn) {
-            achievementsBtn.addEventListener('click', () => {
+            const handleShowAchievements = () => {
                 this.showAchievements();
-            });
+            };
+            achievementsBtn.addEventListener('click', handleShowAchievements);
+            achievementsBtn.addEventListener('touchend', handleShowAchievements);
         }
 
         const backToMenuFromAchievementsBtn = document.getElementById('backToMenuFromAchievements');
         if (backToMenuFromAchievementsBtn) {
-            backToMenuFromAchievementsBtn.addEventListener('click', () => {
+            const handleBackFromAchievements = () => {
                 this.clearDifficultySelection();
                 this.showScreen('mainMenu');
-            });
+            };
+            backToMenuFromAchievementsBtn.addEventListener('click', handleBackFromAchievements);
+            backToMenuFromAchievementsBtn.addEventListener('touchend', handleBackFromAchievements);
         }
 
         // Game buttons
         const restartBtn = document.getElementById('restartBtn');
         if (restartBtn) {
-            restartBtn.addEventListener('click', () => {
+            const handleRestart = () => {
                 this.showLoading();
                 game.restart();
-            });
+            };
+            restartBtn.addEventListener('click', handleRestart);
+            restartBtn.addEventListener('touchend', handleRestart);
         }
 
         const menuBtn = document.getElementById('menuBtn');
         if (menuBtn) {
-            menuBtn.addEventListener('click', () => {
+            const handleMenu = () => {
                 this.showLoading();
                 game.showMenu();
-            });
+            };
+            menuBtn.addEventListener('click', handleMenu);
+            menuBtn.addEventListener('touchend', handleMenu);
         }
 
         const changeSettingsBtn = document.getElementById('changeSettingsBtn');
         if (changeSettingsBtn) {
-            changeSettingsBtn.addEventListener('click', () => {
+            const handleChangeSettings = () => {
                 this.showCustomSettings();
-            });
+            };
+            changeSettingsBtn.addEventListener('click', handleChangeSettings);
+            changeSettingsBtn.addEventListener('touchend', handleChangeSettings);
         }
 
         // Keyboard controls
