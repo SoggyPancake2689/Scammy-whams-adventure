@@ -58,7 +58,38 @@ class Diamond {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.rotation);
+        
+        // Get current skin
+        const currentSkin = scoreStorage ? scoreStorage.getCurrentSkin() : 'default';
+        const skins = scoreStorage ? scoreStorage.getSkins() : {};
+        const skinData = skins[currentSkin] || { name: 'Default' };
+        
+        // Draw based on skin
+        switch (currentSkin) {
+            case 'rainbow':
+                this.drawRainbowSkin(ctx);
+                break;
+            case 'fire':
+                this.drawFireSkin(ctx);
+                break;
+            case 'ice':
+                this.drawIceSkin(ctx);
+                break;
+            case 'sparkles':
+                this.drawSparklesSkin(ctx);
+                break;
+            case 'voltz':
+                this.drawVoltzSkin(ctx);
+                break;
+            default:
+                this.drawDefaultSkin(ctx);
+        }
 
+        ctx.restore();
+    }
+
+    // Default diamond skin
+    drawDefaultSkin(ctx) {
         // Diamond gradient
         const diamondGradient = ctx.createLinearGradient(-this.size, -this.size, this.size, this.size);
         diamondGradient.addColorStop(0, CONSTANTS.COLORS.DIAMOND_GRADIENT[0]);
@@ -95,8 +126,187 @@ class Diamond {
         ctx.strokeStyle = '#FFD700';
         ctx.lineWidth = 2;
         ctx.stroke();
+    }
 
-        ctx.restore();
+    // Rainbow skin
+    drawRainbowSkin(ctx) {
+        // Create rainbow gradient
+        const gradient = ctx.createLinearGradient(-this.size, -this.size, this.size, this.size);
+        gradient.addColorStop(0, '#FF0000');
+        gradient.addColorStop(0.2, '#FF8000');
+        gradient.addColorStop(0.4, '#FFFF00');
+        gradient.addColorStop(0.6, '#00FF00');
+        gradient.addColorStop(0.8, '#0080FF');
+        gradient.addColorStop(1, '#8000FF');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        const halfSize = this.size / 2;
+        ctx.moveTo(0, -halfSize);
+        ctx.lineTo(halfSize, 0);
+        ctx.lineTo(0, halfSize);
+        ctx.lineTo(-halfSize, 0);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Add outline
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Fire skin
+    drawFireSkin(ctx) {
+        // Create fire gradient
+        const gradient = ctx.createLinearGradient(-this.size, -this.size, this.size, this.size);
+        gradient.addColorStop(0, '#FF4500');
+        gradient.addColorStop(0.5, '#FF6347');
+        gradient.addColorStop(1, '#FF0000');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        const halfSize = this.size / 2;
+        ctx.moveTo(0, -halfSize);
+        ctx.lineTo(halfSize, 0);
+        ctx.lineTo(0, halfSize);
+        ctx.lineTo(-halfSize, 0);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Add fire outline
+        ctx.strokeStyle = '#FFD700';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+    }
+
+    // Ice skin
+    drawIceSkin(ctx) {
+        // Create ice gradient
+        const gradient = ctx.createLinearGradient(-this.size, -this.size, this.size, this.size);
+        gradient.addColorStop(0, '#87CEEB');
+        gradient.addColorStop(0.5, '#B0E0E6');
+        gradient.addColorStop(1, '#E0F6FF');
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        const halfSize = this.size / 2;
+        ctx.moveTo(0, -halfSize);
+        ctx.lineTo(halfSize, 0);
+        ctx.lineTo(0, halfSize);
+        ctx.lineTo(-halfSize, 0);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Add ice outline
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // Voltz skin (smiley face)
+    drawVoltzSkin(ctx) {
+        // Draw yellow circle background
+        ctx.fillStyle = '#FFD700';
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw smiley face
+        ctx.fillStyle = '#000000';
+        
+        // Eyes
+        ctx.beginPath();
+        ctx.arc(-this.size/6, -this.size/8, this.size/12, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(this.size/6, -this.size/8, this.size/12, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Smile
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size/3, 0, Math.PI);
+        ctx.stroke();
+        
+        // Add outline
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Sparkles skin (confetti ball)
+    drawSparklesSkin(ctx) {
+        const halfSize = this.size / 2;
+        
+        // Draw base circle with confetti colors
+        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, halfSize);
+        gradient.addColorStop(0, '#FF69B4'); // Hot pink center
+        gradient.addColorStop(0.3, '#FF1493'); // Deep pink
+        gradient.addColorStop(0.6, '#FF6347'); // Tomato
+        gradient.addColorStop(1, '#FFD700'); // Gold edge
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw confetti pieces (small colored rectangles)
+        const confettiColors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFA500', '#800080'];
+        
+        for (let i = 0; i < 12; i++) {
+            const angle = (i / 12) * Math.PI * 2;
+            const distance = halfSize * 0.7;
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+            
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle + Math.PI / 4);
+            
+            // Random confetti color
+            ctx.fillStyle = confettiColors[i % confettiColors.length];
+            ctx.fillRect(-halfSize * 0.1, -halfSize * 0.05, halfSize * 0.2, halfSize * 0.1);
+            
+            ctx.restore();
+        }
+        
+        // Add sparkle effects (small stars)
+        ctx.fillStyle = '#FFFFFF';
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const distance = halfSize * 0.4;
+            const x = Math.cos(angle) * distance;
+            const y = Math.sin(angle) * distance;
+            
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Draw small star
+            ctx.beginPath();
+            ctx.moveTo(0, -halfSize * 0.08);
+            ctx.lineTo(halfSize * 0.03, -halfSize * 0.03);
+            ctx.lineTo(halfSize * 0.08, 0);
+            ctx.lineTo(halfSize * 0.03, halfSize * 0.03);
+            ctx.lineTo(0, halfSize * 0.08);
+            ctx.lineTo(-halfSize * 0.03, halfSize * 0.03);
+            ctx.lineTo(-halfSize * 0.08, 0);
+            ctx.lineTo(-halfSize * 0.03, -halfSize * 0.03);
+            ctx.closePath();
+            ctx.fill();
+            
+            ctx.restore();
+        }
+        
+        // Add outline
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize, 0, Math.PI * 2);
+        ctx.stroke();
     }
 
     // Check collision with rectangle

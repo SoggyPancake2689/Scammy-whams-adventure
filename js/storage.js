@@ -15,6 +15,9 @@ class ScoreStorage {
         this.highScoreBeatStreakKey = 'diamondFlappyHighScoreBeatStreak';
         this.bestSurvivalTimeKey = 'diamondFlappyBestSurvivalTime';
         this.quickDeathsKey = 'diamondFlappyQuickDeaths';
+        this.coinsKey = 'diamondFlappyCoins';
+        this.skinsKey = 'diamondFlappySkins';
+        this.currentSkinKey = 'diamondFlappyCurrentSkin';
     }
 
     // Get all high scores
@@ -106,10 +109,143 @@ class ScoreStorage {
             localStorage.removeItem(this.highScoreBeatStreakKey);
             localStorage.removeItem(this.bestSurvivalTimeKey);
             localStorage.removeItem(this.quickDeathsKey);
+            localStorage.removeItem(this.coinsKey);
+            localStorage.removeItem(this.skinsKey);
+            localStorage.removeItem(this.currentSkinKey);
             this.updateHighScoreDisplay();
         } catch (error) {
             console.warn('Error clearing high scores:', error);
         }
+    }
+
+    // Coin system
+    getCoins() {
+        try {
+            const stored = localStorage.getItem(this.coinsKey);
+            return stored ? parseInt(stored) : 0;
+        } catch (error) {
+            console.warn('Error loading coins:', error);
+            return 0;
+        }
+    }
+
+    addCoins(amount) {
+        try {
+            const currentCoins = this.getCoins();
+            const newAmount = currentCoins + amount;
+            localStorage.setItem(this.coinsKey, newAmount.toString());
+            return newAmount;
+        } catch (error) {
+            console.warn('Error adding coins:', error);
+            return this.getCoins();
+        }
+    }
+
+    spendCoins(amount) {
+        try {
+            const currentCoins = this.getCoins();
+            if (currentCoins >= amount) {
+                const newAmount = currentCoins - amount;
+                localStorage.setItem(this.coinsKey, newAmount.toString());
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.warn('Error spending coins:', error);
+            return false;
+        }
+    }
+
+    // Skin system
+    getSkins() {
+        try {
+            const stored = localStorage.getItem(this.skinsKey);
+            let skins = {};
+            if (stored) {
+                skins = JSON.parse(stored);
+            }
+            
+            // Ensure all default skins exist (merge with stored data)
+            const defaultSkins = {
+                'default': { name: 'Default', unlocked: true, cost: 0 },
+                'rainbow': { name: 'Rainbow', unlocked: false, cost: 10 },
+                'fire': { name: 'Fire', unlocked: false, cost: 15 },
+                'ice': { name: 'Ice', unlocked: false, cost: 20 },
+                'sparkles': { name: 'Sparkles', unlocked: false, cost: 25, secret: true },
+                'voltz': { name: 'Voltz', unlocked: false, cost: 0, secret: true }
+            };
+            
+            // Merge stored skins with defaults (stored takes precedence)
+            const mergedSkins = { ...defaultSkins, ...skins };
+            
+            // Save merged skins back to localStorage to ensure all skins are present
+            localStorage.setItem(this.skinsKey, JSON.stringify(mergedSkins));
+            
+            return mergedSkins;
+        } catch (error) {
+            console.warn('Error loading skins:', error);
+            // Return default skins if there's an error
+            return {
+                'default': { name: 'Default', unlocked: true, cost: 0 },
+                'rainbow': { name: 'Rainbow', unlocked: false, cost: 10 },
+                'fire': { name: 'Fire', unlocked: false, cost: 15 },
+                'ice': { name: 'Ice', unlocked: false, cost: 20 },
+                'sparkles': { name: 'Sparkles', unlocked: false, cost: 25, secret: true },
+                'voltz': { name: 'Voltz', unlocked: false, cost: 0, secret: true }
+            };
+        }
+    }
+
+    unlockSkin(skinId) {
+        try {
+            const skins = this.getSkins();
+            if (skins[skinId]) {
+                skins[skinId].unlocked = true;
+                localStorage.setItem(this.skinsKey, JSON.stringify(skins));
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.warn('Error unlocking skin:', error);
+            return false;
+        }
+    }
+
+    getCurrentSkin() {
+        try {
+            const stored = localStorage.getItem(this.currentSkinKey);
+            return stored || 'default';
+        } catch (error) {
+            console.warn('Error loading current skin:', error);
+            return 'default';
+        }
+    }
+
+    setCurrentSkin(skinId) {
+        try {
+            const skins = this.getSkins();
+            if (skins[skinId] && skins[skinId].unlocked) {
+                localStorage.setItem(this.currentSkinKey, skinId);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.warn('Error setting current skin:', error);
+            return false;
+        }
+    }
+
+    // Secret code system
+    checkSecretCode(code) {
+        if (code === '123') {
+            this.unlockSkin('voltz');
+            return true;
+        }
+        if (code === 'ga') {
+            this.unlockSkin('sparkles');
+            return true;
+        }
+        return false;
     }
 
     // Achievement system
@@ -126,9 +262,14 @@ class ScoreStorage {
     unlockAchievement(achievementId) {
         try {
             const achievements = this.getAchievements();
-            achievements[achievementId] = true;
-            localStorage.setItem(this.achievementsKey, JSON.stringify(achievements));
-            return true;
+            if (!achievements[achievementId]) {
+                achievements[achievementId] = true;
+                localStorage.setItem(this.achievementsKey, JSON.stringify(achievements));
+                // Give 5 coins for each achievement
+                this.addCoins(5);
+                return true;
+            }
+            return false;
         } catch (error) {
             console.warn('Error unlocking achievement:', error);
             return false;

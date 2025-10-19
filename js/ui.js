@@ -219,6 +219,60 @@ class UIManager {
             backToMenuFromAchievementsBtn.addEventListener('touchend', handleBackFromAchievements);
         }
 
+        // Shop button
+        const shopBtn = document.getElementById('shopBtn');
+        if (shopBtn) {
+            const handleShowShop = () => {
+                this.showShop();
+            };
+            shopBtn.addEventListener('click', handleShowShop);
+            shopBtn.addEventListener('touchend', handleShowShop);
+        }
+
+        const backToMenuFromShopBtn = document.getElementById('backToMenuFromShop');
+        if (backToMenuFromShopBtn) {
+            const handleBackFromShop = () => {
+                this.clearDifficultySelection();
+                this.showScreen('mainMenu');
+            };
+            backToMenuFromShopBtn.addEventListener('click', handleBackFromShop);
+            backToMenuFromShopBtn.addEventListener('touchend', handleBackFromShop);
+        }
+
+        // Secret code input
+        const secretCodeInput = document.getElementById('secretCodeInput');
+        const submitSecretCodeBtn = document.getElementById('submitSecretCode');
+        if (secretCodeInput && submitSecretCodeBtn) {
+            const handleSecretCode = () => {
+                const code = secretCodeInput.value.trim();
+                if (code) {
+                    if (scoreStorage.checkSecretCode(code)) {
+                        let skinName = '';
+                        if (code === '123') {
+                            skinName = 'Voltz';
+                        } else if (code === 'ga') {
+                            skinName = 'Sparkles';
+                        }
+                        this.showNotification(`🎉 Secret code accepted! ${skinName} skin unlocked!`, 'success');
+                        this.populateSkins(); // Refresh skins display
+                        secretCodeInput.value = ''; // Clear input
+                    } else {
+                        this.showNotification('❌ Invalid secret code!', 'error');
+                    }
+                }
+            };
+            
+            submitSecretCodeBtn.addEventListener('click', handleSecretCode);
+            submitSecretCodeBtn.addEventListener('touchend', handleSecretCode);
+            
+            // Also handle Enter key
+            secretCodeInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleSecretCode();
+                }
+            });
+        }
+
         // Game buttons
         const restartBtn = document.getElementById('restartBtn');
         if (restartBtn) {
@@ -401,6 +455,168 @@ class UIManager {
             btn.classList.remove('selected');
         });
         this.selectedDifficulty = null;
+    }
+
+    // Show shop screen
+    showShop() {
+        this.showScreen('shop');
+        this.updateCoinsDisplay();
+        this.populateSkins();
+    }
+
+    // Update coins display
+    updateCoinsDisplay() {
+        const coinsElement = document.getElementById('coinsAmount');
+        if (coinsElement) {
+            coinsElement.textContent = scoreStorage.getCoins();
+        }
+    }
+
+    // Populate skins grid
+    populateSkins() {
+        const skinsGrid = document.getElementById('skinsGrid');
+        if (!skinsGrid) return;
+
+        const skins = scoreStorage.getSkins();
+        const currentSkin = scoreStorage.getCurrentSkin();
+        
+        skinsGrid.innerHTML = '';
+
+        Object.entries(skins).forEach(([skinId, skinData]) => {
+            const skinItem = document.createElement('div');
+            skinItem.className = `skin-item ${skinData.unlocked ? 'unlocked' : 'locked'} ${skinId === currentSkin ? 'selected' : ''} ${skinData.secret ? 'secret' : ''}`;
+            
+            // Create skin preview based on skin type
+            let previewEmoji = '💎'; // Default diamond
+            switch (skinId) {
+                case 'rainbow':
+                    previewEmoji = '🌈';
+                    break;
+                case 'fire':
+                    previewEmoji = '🔥';
+                    break;
+                case 'ice':
+                    previewEmoji = '❄️';
+                    break;
+                case 'sparkles':
+                    previewEmoji = '🎉';
+                    break;
+                case 'voltz':
+                    previewEmoji = '😊'; // Smiley face
+                    break;
+                default:
+                    previewEmoji = '💎';
+            }
+
+            skinItem.innerHTML = `
+                <div class="skin-preview">${previewEmoji}</div>
+                <div class="skin-name">${skinData.name}</div>
+                <div class="skin-cost">${skinData.secret ? 'Only for devs' : (skinData.cost === 0 ? 'Free' : `${skinData.cost} coins`)}</div>
+                <div class="skin-status ${skinData.unlocked ? 'unlocked' : 'locked'}">
+                    ${skinId === currentSkin ? 'Selected' : (skinData.unlocked ? 'Unlocked' : 'Locked')}
+                </div>
+            `;
+
+            // Add click handler
+            if (skinData.unlocked) {
+                skinItem.addEventListener('click', () => {
+                    this.selectSkin(skinId);
+                });
+                skinItem.addEventListener('touchend', () => {
+                    this.selectSkin(skinId);
+                });
+            } else if (skinData.cost > 0 && !skinData.secret) {
+                skinItem.addEventListener('click', () => {
+                    this.buySkin(skinId, skinData.cost);
+                });
+                skinItem.addEventListener('touchend', () => {
+                    this.buySkin(skinId, skinData.cost);
+                });
+            }
+
+            // Add hover tooltip for secret skins
+            if (skinId === 'voltz') {
+                skinItem.title = 'Only for devs';
+            }
+            if (skinId === 'sparkles') {
+                skinItem.title = 'Only for devs';
+            }
+
+            skinsGrid.appendChild(skinItem);
+        });
+    }
+
+    // Select a skin
+    selectSkin(skinId) {
+        if (scoreStorage.setCurrentSkin(skinId)) {
+            this.populateSkins(); // Refresh display
+            this.showNotification(`🎨 ${scoreStorage.getSkins()[skinId].name} skin selected!`, 'success');
+        }
+    }
+
+    // Buy a skin
+    buySkin(skinId, cost) {
+        if (scoreStorage.spendCoins(cost)) {
+            if (scoreStorage.unlockSkin(skinId)) {
+                this.updateCoinsDisplay();
+                this.populateSkins(); // Refresh display
+                this.showNotification(`🎉 ${scoreStorage.getSkins()[skinId].name} skin purchased!`, 'success');
+            }
+        } else {
+            this.showNotification('💰 Not enough coins!', 'error');
+        }
+    }
+
+    // Show notification
+    showNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existingNotifications = document.querySelectorAll('.notification');
+        existingNotifications.forEach(notification => notification.remove());
+
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10001;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            max-width: 90vw;
+            word-wrap: break-word;
+            animation: notificationSlideIn 0.3s ease-out;
+        `;
+
+        // Set background color based on type
+        switch (type) {
+            case 'success':
+                notification.style.background = 'linear-gradient(45deg, #4CAF50, #388E3C)';
+                break;
+            case 'error':
+                notification.style.background = 'linear-gradient(45deg, #F44336, #D32F2F)';
+                break;
+            default:
+                notification.style.background = 'linear-gradient(45deg, #2196F3, #1976D2)';
+        }
+
+        document.body.appendChild(notification);
+
+        // Remove after 3 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.style.animation = 'notificationSlideOut 0.3s ease-in';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }, 3000);
     }
 
     // Initialize UI

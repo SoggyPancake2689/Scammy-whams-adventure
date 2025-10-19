@@ -154,6 +154,7 @@ class Game {
         this.gameStarted = false;
         this.gameStartTime = Date.now();
         this.survivalTime = 0;
+        this.achievementsChecked = false;
         
         // Track games played and difficulty
         scoreStorage.incrementGamesPlayed();
@@ -323,8 +324,9 @@ class Game {
             this.score = this.obstacleManager.getTotalScore();
             this.ui.updateScore(this.score);
             
-            // Check for achievements immediately when score reaches 20+
-            if (this.score >= 20) {
+            // Check for achievements immediately when score reaches 5+
+            if (this.score >= 5 && !this.achievementsChecked) {
+                this.achievementsChecked = true;
                 const newAchievements = scoreStorage.checkAchievementsOnScoreUpdate(this.currentDifficulty.name, this.score);
                 newAchievements.forEach(achievement => {
                     this.ui.showAchievementNotification(

@@ -1190,3 +1190,233 @@ body {
         padding: 20px !important;
     }
 }
+
+/* Shop page styles */
+.shop-content {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.shop-title {
+    text-align: center;
+    color: #FFD700;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.coins-display {
+    text-align: center;
+    background: linear-gradient(135deg, #F39C12, #E67E22);
+    border: 2px solid #D35400;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.coins-label {
+    margin-right: 10px;
+}
+
+.skins-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    max-height: calc(100vh - 300px);
+}
+
+.skin-item {
+    background: linear-gradient(135deg, #2C3E50, #34495E);
+    border: 2px solid #3498DB;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.skin-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.skin-item.unlocked {
+    border-color: #27AE60;
+    background: linear-gradient(135deg, #27AE60, #2ECC71);
+}
+
+.skin-item.locked {
+    border-color: #7F8C8D;
+    background: linear-gradient(135deg, #7F8C8D, #95A5A6);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.skin-item.selected {
+    border-color: #FFD700;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #000000;
+}
+
+.skin-item.secret {
+    border-color: #E74C3C;
+    background: linear-gradient(135deg, #E74C3C, #C0392B);
+}
+
+.skin-preview {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    border: 2px solid #FFFFFF;
+}
+
+.skin-name {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #FFFFFF;
+}
+
+.skin-item.selected .skin-name {
+    color: #000000;
+}
+
+.skin-cost {
+    font-size: 0.9em;
+    color: #BDC3C7;
+    margin-bottom: 10px;
+}
+
+.skin-item.selected .skin-cost {
+    color: #000000;
+}
+
+.skin-status {
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+.skin-status.unlocked {
+    background: #27AE60;
+    color: #FFFFFF;
+}
+
+.skin-status.locked {
+    background: #7F8C8D;
+    color: #FFFFFF;
+}
+
+.skin-status.selected {
+    background: #FFD700;
+    color: #000000;
+}
+
+.secret-code-section {
+    background: linear-gradient(135deg, #8E44AD, #9B59B6);
+    border: 2px solid #7D3C98;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.secret-code-section h3 {
+    color: #FFFFFF;
+    margin-bottom: 15px;
+}
+
+#secretCodeInput {
+    padding: 10px;
+    border: 2px solid #7D3C98;
+    border-radius: 5px;
+    background: #FFFFFF;
+    color: #000000;
+    font-size: 1em;
+    margin-right: 10px;
+    width: 200px;
+}
+
+#secretCodeInput:focus {
+    outline: none;
+    border-color: #FFD700;
+}
+
+.shop-buttons {
+    text-align: center;
+    margin-top: 20px;
+    flex-shrink: 0;
+}
+
+/* Custom scrollbar for skins grid */
+.skins-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.skins-grid::-webkit-scrollbar-track {
+    background: #2C3E50;
+    border-radius: 4px;
+}
+
+.skins-grid::-webkit-scrollbar-thumb {
+    background: #3498DB;
+    border-radius: 4px;
+}
+
+.skins-grid::-webkit-scrollbar-thumb:hover {
+    background: #2980B9;
+}
+
+/* Mobile shop adjustments */
+@media (max-width: 768px) {
+    .shop-content {
+        padding: 15px !important;
+    }
+    
+    .skins-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+        gap: 10px !important;
+    }
+    
+    .skin-item {
+        padding: 10px !important;
+    }
+    
+    .skin-preview {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.5em !important;
+    }
+    
+    .skin-name {
+        font-size: 1em !important;
+    }
+    
+    .skin-cost {
+        font-size: 0.8em !important;
+    }
+    
+    #secretCodeInput {
+        width: 150px !important;
+        margin-right: 5px !important;
+    }
+}

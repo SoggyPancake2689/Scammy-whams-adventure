@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scammy's Whams - Diamond Flappy Game</title>
+    <title>Scammy Wham's Great Adventure</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,7 +22,7 @@
             <div class="menu-scroll-container">
                 <div class="menu-content">
                     <h1 class="game-title">Scammy Wham's</h1>
-                    <p class="game-subtitle">Great Adventure</p>
+                    <h2 class="game-subtitle">Great Adventure</h2>
                     
                     <div class="difficulty-section">
                         <h3>Choose Difficulty</h3>
@@ -107,15 +107,17 @@
                         <p>Created with HTML5 Canvas & JavaScript</p>
                         <p>Featuring smooth 60fps gameplay</p>
                         <p>Built with love for the Flappy Bird genre</p>
+                        <p>Made with love for Cammy Whams</p>
                     </div>
 
                     <div class="scroll-hint">
                         <p>💡 Scroll up and down to see more content!</p>
                     </div>
                     
-                    <div class="menu-buttons">
-                        <button id="achievementsBtn" class="btn primary-btn">🏆 Achievements</button>
-                    </div>
+                <div class="menu-buttons">
+                    <button id="shopBtn" class="btn primary-btn">🔒 Locker</button>
+                    <button id="achievementsBtn" class="btn primary-btn">🏆 Achievements</button>
+                </div>
                 </div>
             </div>
         </div>
@@ -129,6 +131,28 @@
                 </div>
                 <div class="achievements-buttons">
                     <button id="backToMenuFromAchievements" class="btn secondary-btn">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop Screen -->
+        <div id="shopScreen" class="screen hidden">
+            <div class="shop-content">
+                <h2 class="shop-title">🔒 Locker</h2>
+                <div class="coins-display">
+                    <span class="coins-label">💰 Coins:</span>
+                    <span id="coinsAmount">0</span>
+                </div>
+                <div class="skins-grid" id="skinsGrid">
+                    <!-- Skins will be populated dynamically -->
+                </div>
+                <div class="secret-code-section">
+                    <h3>🔐 Secret Code</h3>
+                    <input type="text" id="secretCodeInput" placeholder="Enter secret code..." maxlength="10">
+                    <button id="submitSecretCode" class="btn primary-btn">Submit</button>
+                </div>
+                <div class="shop-buttons">
+                    <button id="backToMenuFromShop" class="btn secondary-btn">Back to Menu</button>
                 </div>
             </div>
         </div>
