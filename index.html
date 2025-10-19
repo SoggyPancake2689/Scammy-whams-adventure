@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scammy's Whams - Diamond Flappy Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        
+        <!-- Main Menu -->
+        <div id="mainMenuScreen" class="screen">
+            <div class="menu-content">
+                <h1 class="game-title">Scammy's Whams</h1>
+                <p class="game-subtitle">Diamond Dash Adventure</p>
+                
+                <div class="difficulty-section">
+                    <h3>Choose Difficulty</h3>
+                    <div class="difficulty-buttons">
+                        <button class="difficulty-btn" data-difficulty="easy">
+                            <span class="btn-text">Easy</span>
+                            <span class="high-score">High Score: <span id="easyHighScore">0</span></span>
+                        </button>
+                        <button class="difficulty-btn" data-difficulty="normal">
+                            <span class="btn-text">Normal</span>
+                            <span class="high-score">High Score: <span id="normalHighScore">0</span></span>
+                        </button>
+                        <button class="difficulty-btn" data-difficulty="hard">
+                            <span class="btn-text">Hard</span>
+                            <span class="high-score">High Score: <span id="hardHighScore">0</span></span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="menu-instructions">
+                    <p>Click on a difficulty level to start!</p>
+                    <p>Use SPACEBAR or CLICK to flap during gameplay!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="screen hidden">
+            <div class="loading-content">
+                <div class="loading-diamond"></div>
+                <p class="loading-text">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Game HUD -->
+        <div id="gameHUD" class="screen hidden">
+            <div class="hud-content">
+                <div class="score-display">
+                    <span class="score-label">Score:</span>
+                    <span id="currentScore">0</span>
+                </div>
+                <div class="countdown" id="countdown"></div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="screen hidden">
+            <div class="game-over-content">
+                <h2 class="game-over-title">Game Over!</h2>
+                <div class="final-score">
+                    <p>Final Score: <span id="finalScore">0</span></p>
+                    <p class="high-score-message" id="highScoreMessage"></p>
+                </div>
+                <div class="game-over-buttons">
+                    <button id="restartBtn" class="game-btn">Play Again</button>
+                    <button id="menuBtn" class="game-btn">Main Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/constants.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/diamond.js"></script>
+    <script src="js/obstacles.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
