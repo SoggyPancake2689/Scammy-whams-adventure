@@ -490,3 +490,147 @@ body {
         font-size: 1em;
     }
 }
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    /* Prevent zoom and improve touch experience */
+    html {
+        touch-action: manipulation;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    body {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+    
+    /* Make buttons larger for easier tapping */
+    .difficulty-btn {
+        padding: 20px 30px !important;
+        font-size: 18px !important;
+        margin: 15px 0 !important;
+        min-height: 60px !important;
+    }
+    
+    .btn {
+        padding: 15px 25px !important;
+        font-size: 16px !important;
+        min-height: 50px !important;
+    }
+    
+    /* Adjust fullscreen button for mobile */
+    .fullscreen-button {
+        width: 60px;
+        height: 60px;
+        top: 15px;
+        right: 15px;
+    }
+    
+    /* Make countdown larger on mobile */
+    .countdown {
+        font-size: 120px !important;
+        padding: 40px !important;
+    }
+    
+    /* Adjust menu content for mobile */
+    .menu-content {
+        padding: 20px !important;
+    }
+    
+    .menu-title {
+        font-size: 36px !important;
+        margin-bottom: 30px !important;
+    }
+    
+    .game-features h3,
+    .controls-info h3,
+    .difficulty-info h3,
+    .credits h3 {
+        font-size: 20px !important;
+    }
+    
+    .game-features li,
+    .controls-info li,
+    .difficulty-info li {
+        font-size: 16px !important;
+        margin: 8px 0 !important;
+    }
+    
+    /* Improve scrollbar visibility on mobile */
+    .menu-scroll-container::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .menu-scroll-container::-webkit-scrollbar-thumb {
+        background: rgba(255, 215, 0, 0.6);
+        border-radius: 4px;
+    }
+    
+    /* Game over screen adjustments */
+    .game-over-content {
+        padding: 30px !important;
+    }
+    
+    .game-over-title {
+        font-size: 48px !important;
+    }
+    
+    .final-score {
+        font-size: 24px !important;
+    }
+    
+    .high-score {
+        font-size: 20px !important;
+    }
+}
+
+/* Very small screens (phones in portrait) */
+@media (max-width: 480px) {
+    .difficulty-btn {
+        padding: 25px 20px !important;
+        font-size: 16px !important;
+        margin: 12px 0 !important;
+    }
+    
+    .countdown {
+        font-size: 100px !important;
+        padding: 30px !important;
+    }
+    
+    .menu-title {
+        font-size: 32px !important;
+    }
+    
+    .game-over-title {
+        font-size: 42px !important;
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+    .menu-content {
+        padding: 15px !important;
+    }
+    
+    .menu-title {
+        font-size: 28px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .difficulty-btn {
+        padding: 15px 20px !important;
+        font-size: 14px !important;
+        margin: 8px 0 !important;
+    }
+    
+    .countdown {
+        font-size: 80px !important;
+        padding: 20px !important;
+    }
+}

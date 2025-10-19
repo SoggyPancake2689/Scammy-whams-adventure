@@ -238,6 +238,11 @@ class Game {
                 this.diamond.updateVisuals(deltaTime);
             }
             
+            // Check proximity to obstacles for enhanced glow effect (works in both countdown and playing states)
+            if (this.obstacleManager.obstacles.length > 0) {
+                this.diamond.checkProximityToObstacles(this.obstacleManager.obstacles);
+            }
+            
             // Only check collisions during actual gameplay (not during countdown)
             if (this.state === CONSTANTS.STATES.PLAYING) {
                 // Check collision with obstacles

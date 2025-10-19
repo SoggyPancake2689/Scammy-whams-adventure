@@ -44,7 +44,7 @@ const CONSTANTS = {
     // Diamond settings
     DIAMOND: {
         SIZE: 30,
-        ROTATION_SPEED: 2.0, // Much faster rotation (was 0.6)
+        ROTATION_SPEED: 5.0, // Much faster rotation (was 0.6)
         GLOW_INTENSITY: 0.8
     },
     
@@ -78,8 +78,8 @@ const CONSTANTS = {
     // UI settings
     UI: {
         COUNTDOWN_DURATION: 3000,
-        LOADING_DURATION: 120000, // Increased to 120 seconds (2 minutes) for maximum reading time
-        FADE_DURATION: 500
+        LOADING_DURATION: 5000, // Increased to 120 seconds (2 minutes) for maximum reading time
+        FADE_DURATION: 5000
     },
     
     // Storage

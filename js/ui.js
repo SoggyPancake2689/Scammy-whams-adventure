@@ -210,10 +210,60 @@ class UIManager {
             }
         });
 
-        // Prevent context menu on right click
+        // Mobile touch controls
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        
+        // Touch start - prevent default to avoid scrolling
+        document.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+        }, { passive: false });
+        
+        // Touch end - handle tap/flap
+        document.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            
+            const touchEndTime = Date.now();
+            const touchDuration = touchEndTime - touchStartTime;
+            const touchEndY = e.changedTouches[0].clientY;
+            const touchDistance = Math.abs(touchEndY - touchStartY);
+            
+            // Consider it a tap if:
+            // - Touch duration is short (< 300ms)
+            // - Touch distance is small (< 50px)
+            const isTap = touchDuration < 300 && touchDistance < 50;
+            
+            if (isTap) {
+                if (this.currentScreen === 'mainMenuScreen' && this.selectedDifficulty) {
+                    // Start game from menu
+                    this.showLoading();
+                    setTimeout(() => {
+                        game.startGame(this.selectedDifficulty);
+                    }, 500);
+                } else if (this.currentScreen === 'gameHUD' && (game.state === CONSTANTS.STATES.COUNTDOWN || game.state === CONSTANTS.STATES.PLAYING)) {
+                    // Flap diamond during countdown or gameplay
+                    console.log('Touch tap - attempting to flap diamond');
+                    game.flapDiamond();
+                }
+            }
+        }, { passive: false });
+        
+        // Prevent context menu on long press (mobile)
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         });
+        
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
     }
 
     // Initialize UI
