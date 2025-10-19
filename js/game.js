@@ -130,7 +130,23 @@ class Game {
     // Start the game with selected difficulty
     startGame(difficultyName) {
         console.log(`Starting game with difficulty: ${difficultyName}`);
-        this.currentDifficulty = CONSTANTS.DIFFICULTY[difficultyName.toUpperCase()];
+        
+        // Handle custom mode
+        if (difficultyName === 'custom') {
+            const customSettings = this.ui.getCustomSettings();
+            this.currentDifficulty = {
+                name: 'custom',
+                gravity: 1500,
+                flapVelocity: -450,
+                obstacleSpeed: customSettings.speed,
+                gapSize: customSettings.gapSize,
+                spawnInterval: 2000,
+                isCustom: true
+            };
+        } else {
+            this.currentDifficulty = CONSTANTS.DIFFICULTY[difficultyName.toUpperCase()];
+        }
+        
         this.obstacleManager.setDifficulty(this.currentDifficulty);
         
         // Reset game state
@@ -200,6 +216,9 @@ class Game {
         this.state = CONSTANTS.STATES.GAME_OVER;
         this.gameStarted = false;
         
+        // Increment death count for achievements
+        scoreStorage.incrementDeathCount();
+        
         // Create impact particles
         if (this.diamond) {
             const center = this.diamond.getCenter();
@@ -208,6 +227,9 @@ class Game {
         
         // Check for new high score
         const isNewHighScore = scoreStorage.saveHighScore(this.currentDifficulty.name, this.score);
+        
+        // Check for custom mode unlock
+        this.ui.checkCustomModeUnlock();
         
         // Show game over screen
         this.ui.showGameOver(this.score, isNewHighScore);
@@ -236,11 +258,6 @@ class Game {
             } else {
                 // During countdown, only update visual effects (rotation, glow) but not physics
                 this.diamond.updateVisuals(deltaTime);
-            }
-            
-            // Check proximity to obstacles for enhanced glow effect (works in both countdown and playing states)
-            if (this.obstacleManager.obstacles.length > 0) {
-                this.diamond.checkProximityToObstacles(this.obstacleManager.obstacles);
             }
             
             // Only check collisions during actual gameplay (not during countdown)

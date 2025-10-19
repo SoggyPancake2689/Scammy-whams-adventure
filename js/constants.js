@@ -38,6 +38,15 @@ const CONSTANTS = {
             obstacleSpeed: 300,
             gapSize: 120,
             spawnInterval: 1500
+        },
+        CUSTOM: {
+            name: 'custom',
+            gravity: 1500,
+            flapVelocity: -450,
+            obstacleSpeed: 250,
+            gapSize: 150,
+            spawnInterval: 2000,
+            isCustom: true
         }
     },
     

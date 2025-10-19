@@ -39,6 +39,13 @@
                                 <span class="btn-text">Hard</span>
                                 <span class="high-score">High Score: <span id="hardHighScore">0</span></span>
                             </button>
+                            <button class="difficulty-btn locked" data-difficulty="custom" id="customModeBtn">
+                                <span class="btn-text">Custom</span>
+                                <span class="lock-overlay">
+                                    <span class="lock-icon">🔒</span>
+                                    <span class="lock-text">Score 20+ to unlock</span>
+                                </span>
+                            </button>
                         </div>
                     </div>
                     
@@ -105,10 +112,64 @@
                     <div class="scroll-hint">
                         <p>💡 Scroll up and down to see more content!</p>
                     </div>
+                    
+                    <div class="menu-buttons">
+                        <button id="achievementsBtn" class="btn primary-btn">🏆 Achievements</button>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Achievements Screen -->
+        <div id="achievementsScreen" class="screen hidden">
+            <div class="achievements-content">
+                <h2 class="achievements-title">🏆 Achievements</h2>
+                <div class="achievements-list" id="achievementsList">
+                    <!-- Achievements will be populated by JavaScript -->
+                </div>
+                <div class="achievements-buttons">
+                    <button id="backToMenuFromAchievements" class="btn secondary-btn">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Settings Screen -->
+        <div id="customSettingsScreen" class="screen hidden">
+            <div class="custom-content">
+                <h2 class="custom-title">⚙️ Custom Mode Settings</h2>
+                
+                <div class="settings-container">
+                    <div class="setting-group">
+                        <label for="speedSlider">🚀 Game Speed</label>
+                        <div class="slider-container">
+                            <input type="range" id="speedSlider" min="100" max="1000" value="250" class="slider">
+                            <span id="speedValue">250</span>
+                        </div>
+                        <div class="speed-labels">
+                            <span>Slow</span>
+                            <span>Fast</span>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label for="gapSlider">📏 Gap Size</label>
+                        <div class="slider-container">
+                            <input type="range" id="gapSlider" min="80" max="1000" value="150" class="slider">
+                            <span id="gapValue">150</span>
+                        </div>
+                        <div class="gap-labels">
+                            <span>Small</span>
+                            <span>No Gap</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="custom-buttons">
+                    <button id="startCustomGame" class="btn primary-btn">Start Game</button>
+                    <button id="backToMenu" class="btn secondary-btn">Back to Menu</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Game HUD -->
         <div id="gameHUD" class="game-hud hidden">
@@ -132,6 +193,7 @@
                 <div class="game-over-buttons">
                     <button id="restartBtn" class="game-btn">Play Again</button>
                     <button id="menuBtn" class="game-btn">Main Menu</button>
+                    <button id="changeSettingsBtn" class="game-btn custom-settings-btn hidden">Change Settings</button>
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ class Obstacle {
         this.theme = theme;
         this.width = CONSTANTS.OBSTACLE.WIDTH;
         this.gapSize = gapSize;
-        this.gapY = CONSTANTS.CANVAS_HEIGHT / 2 + (Math.random() - 0.5) * 100;
+        this.gapY = CONSTANTS.CANVAS_HEIGHT / 2; // Always center the gap
         
         // Ensure gap stays within bounds
         this.gapY = Math.max(
