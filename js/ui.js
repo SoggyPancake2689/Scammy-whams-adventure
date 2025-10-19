@@ -122,15 +122,20 @@ class UIManager {
             }
         }
         
-        // Show/hide Change Settings button based on current difficulty and unlock status
+        // Show/hide Change Settings button based on current difficulty
         const changeSettingsBtn = document.getElementById('changeSettingsBtn');
         if (changeSettingsBtn) {
             const isCustomMode = this.selectedDifficulty === 'custom';
-            const isCustomModeUnlocked = scoreStorage.isCustomModeUnlocked();
             
-            if (isCustomMode && isCustomModeUnlocked) {
+            if (isCustomMode) {
                 changeSettingsBtn.classList.remove('hidden');
-                changeSettingsBtn.classList.remove('locked');
+                // Check if Custom Mode is unlocked to determine if button should be locked
+                const isCustomModeUnlocked = scoreStorage.isCustomModeUnlocked();
+                if (isCustomModeUnlocked) {
+                    changeSettingsBtn.classList.remove('locked');
+                } else {
+                    changeSettingsBtn.classList.add('locked');
+                }
             } else {
                 changeSettingsBtn.classList.add('hidden');
                 changeSettingsBtn.classList.add('locked');
@@ -256,6 +261,8 @@ class UIManager {
                             skinName = 'Voltz';
                         } else if (code === 'ga') {
                             skinName = 'Sparkles';
+                        } else if (code === 'iluvu') {
+                            skinName = 'Saturn';
                         }
                         this.showNotification(`🎉 Secret code accepted! ${skinName} skin unlocked!`, 'success');
                         this.populateSkins(); // Refresh skins display
@@ -528,6 +535,9 @@ class UIManager {
                     break;
                 case 'voltz':
                     previewEmoji = '😊'; // Smiley face
+                    break;
+                case 'saturn':
+                    previewEmoji = '🪐'; // Planet emoji
                     break;
                 default:
                     previewEmoji = '💎';

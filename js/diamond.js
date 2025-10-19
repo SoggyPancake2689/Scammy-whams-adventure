@@ -81,6 +81,9 @@ class Diamond {
             case 'voltz':
                 this.drawVoltzSkin(ctx);
                 break;
+            case 'saturn':
+                this.drawSaturnSkin(ctx);
+                break;
             default:
                 this.drawDefaultSkin(ctx);
         }
@@ -235,6 +238,75 @@ class Diamond {
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Saturn skin (planet with rings)
+    drawSaturnSkin(ctx) {
+        const halfSize = this.size / 2;
+        
+        // Draw planet body (main circle)
+        const planetGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, halfSize);
+        planetGradient.addColorStop(0, '#FAD5A5'); // Light cream center
+        planetGradient.addColorStop(0.4, '#E6B800'); // Golden yellow
+        planetGradient.addColorStop(0.8, '#CC9900'); // Darker gold
+        planetGradient.addColorStop(1, '#B8860B'); // Dark goldenrod edge
+        
+        ctx.fillStyle = planetGradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw planet rings (elliptical)
+        ctx.strokeStyle = '#DAA520';
+        ctx.lineWidth = 3;
+        
+        // Outer ring
+        ctx.beginPath();
+        ctx.ellipse(0, 0, halfSize * 0.9, halfSize * 0.3, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // Middle ring
+        ctx.strokeStyle = '#B8860B';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, halfSize * 0.8, halfSize * 0.25, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // Inner ring
+        ctx.strokeStyle = '#CD853F';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, halfSize * 0.7, halfSize * 0.2, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // Add planet surface details (bands)
+        ctx.strokeStyle = '#B8860B';
+        ctx.lineWidth = 1;
+        
+        // Horizontal bands
+        for (let i = -2; i <= 2; i++) {
+            const y = (i * halfSize * 0.15);
+            if (Math.abs(y) < halfSize * 0.6) {
+                ctx.beginPath();
+                ctx.moveTo(-halfSize * 0.6, y);
+                ctx.lineTo(halfSize * 0.6, y);
+                ctx.stroke();
+            }
+        }
+        
+        // Add subtle glow effect
+        ctx.strokeStyle = '#FFD700';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize * 0.7, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // Add outline
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize * 0.7, 0, Math.PI * 2);
         ctx.stroke();
     }
 

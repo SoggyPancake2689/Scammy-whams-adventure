@@ -165,15 +165,16 @@ class ScoreStorage {
                 skins = JSON.parse(stored);
             }
             
-            // Ensure all default skins exist (merge with stored data)
-            const defaultSkins = {
-                'default': { name: 'Default', unlocked: true, cost: 0 },
-                'rainbow': { name: 'Rainbow', unlocked: false, cost: 10 },
-                'fire': { name: 'Fire', unlocked: false, cost: 15 },
-                'ice': { name: 'Ice', unlocked: false, cost: 20 },
-                'sparkles': { name: 'Sparkles', unlocked: false, cost: 25, secret: true },
-                'voltz': { name: 'Voltz', unlocked: false, cost: 0, secret: true }
-            };
+                // Ensure all default skins exist (merge with stored data)
+                const defaultSkins = {
+                    'default': { name: 'Default', unlocked: true, cost: 0 },
+                    'rainbow': { name: 'Rainbow', unlocked: false, cost: 10 },
+                    'fire': { name: 'Fire', unlocked: false, cost: 15 },
+                    'ice': { name: 'Ice', unlocked: false, cost: 20 },
+                    'sparkles': { name: 'Sparkles', unlocked: false, cost: 25, secret: true },
+                    'voltz': { name: 'Voltz', unlocked: false, cost: 0, secret: true },
+                    'saturn': { name: 'Saturn', unlocked: false, cost: 0, secret: true }
+                };
             
             // Merge stored skins with defaults (stored takes precedence)
             const mergedSkins = { ...defaultSkins, ...skins };
@@ -184,15 +185,16 @@ class ScoreStorage {
             return mergedSkins;
         } catch (error) {
             console.warn('Error loading skins:', error);
-            // Return default skins if there's an error
-            return {
-                'default': { name: 'Default', unlocked: true, cost: 0 },
-                'rainbow': { name: 'Rainbow', unlocked: false, cost: 10 },
-                'fire': { name: 'Fire', unlocked: false, cost: 15 },
-                'ice': { name: 'Ice', unlocked: false, cost: 20 },
-                'sparkles': { name: 'Sparkles', unlocked: false, cost: 25, secret: true },
-                'voltz': { name: 'Voltz', unlocked: false, cost: 0, secret: true }
-            };
+                // Return default skins if there's an error
+                return {
+                    'default': { name: 'Default', unlocked: true, cost: 0 },
+                    'rainbow': { name: 'Rainbow', unlocked: false, cost: 10 },
+                    'fire': { name: 'Fire', unlocked: false, cost: 15 },
+                    'ice': { name: 'Ice', unlocked: false, cost: 20 },
+                    'sparkles': { name: 'Sparkles', unlocked: false, cost: 25, secret: true },
+                    'voltz': { name: 'Voltz', unlocked: false, cost: 0, secret: true },
+                    'saturn': { name: 'Saturn', unlocked: false, cost: 0, secret: true }
+                };
         }
     }
 
@@ -243,6 +245,10 @@ class ScoreStorage {
         }
         if (code === 'ga') {
             this.unlockSkin('sparkles');
+            return true;
+        }
+        if (code === 'iluvu') {
+            this.unlockSkin('saturn');
             return true;
         }
         return false;
