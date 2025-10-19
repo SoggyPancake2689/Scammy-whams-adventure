@@ -1,8 +1,8 @@
 // Game constants and configuration
 const CONSTANTS = {
-    // Canvas settings
-    CANVAS_WIDTH: 800,
-    CANVAS_HEIGHT: 600,
+    // Canvas settings - will be set dynamically
+    CANVAS_WIDTH: 800, // Default fallback
+    CANVAS_HEIGHT: 600, // Default fallback
     
     // Game states
     STATES: {
@@ -44,7 +44,7 @@ const CONSTANTS = {
     // Diamond settings
     DIAMOND: {
         SIZE: 30,
-        ROTATION_SPEED: 0.3,
+        ROTATION_SPEED: 2.0, // Much faster rotation (was 0.6)
         GLOW_INTENSITY: 0.8
     },
     
@@ -53,7 +53,7 @@ const CONSTANTS = {
         WIDTH: 80,
         MIN_HEIGHT: 50,
         MAX_HEIGHT: 300,
-        THEMES: ['pipes', 'rocks', 'crystals', 'lasers', 'thorns', 'buildings']
+        THEMES: ['pipes', 'rocks', 'crystals', 'lasers', 'thorns', 'buildings', 'grass']
     },
     
     // Particle settings
@@ -90,12 +90,13 @@ const CONSTANTS = {
         DIAMOND_GRADIENT: ['#FFD700', '#FFA500', '#FF6347'],
         BACKGROUND_GRADIENT: ['#87CEEB', '#98FB98'],
         OBSTACLE_COLORS: {
-            pipes: ['#228B22', '#32CD32'],
-            rocks: ['#696969', '#A9A9A9'],
-            crystals: ['#9370DB', '#BA55D3'],
-            lasers: ['#FF0000', '#FF4500'],
-            thorns: ['#8B4513', '#CD853F'],
-            buildings: ['#2F4F4F', '#708090']
+            pipes: ['#32CD32', '#00FF7F'],
+            rocks: ['#B0B0B0', '#D3D3D3'],
+            crystals: ['#BA55D3', '#DA70D6'],
+            lasers: ['#FF4500', '#FF6347'],
+            thorns: ['#CD853F', '#DEB887'],
+            buildings: ['#708090', '#A9A9A9'],
+            grass: ['#90EE90', '#32CD32', '#228B22']
         },
         PARTICLE_COLORS: ['#FFD700', '#FFA500', '#FF6347', '#FF69B4']
     }

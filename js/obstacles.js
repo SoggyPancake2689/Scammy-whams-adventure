@@ -68,6 +68,9 @@ class Obstacle {
             case 'buildings':
                 this.drawBuilding(ctx, x, y, width, height);
                 break;
+            case 'grass':
+                this.drawGrass(ctx, x, y, width, height);
+                break;
             default:
                 this.drawPipe(ctx, x, y, width, height, isTop);
         }
@@ -97,6 +100,9 @@ class Obstacle {
             case 'buildings':
                 this.drawBuilding(ctx, x, y, width, height);
                 break;
+            case 'grass':
+                this.drawGrass(ctx, x, y, width, height);
+                break;
         }
     }
 
@@ -111,6 +117,11 @@ class Obstacle {
         }
         ctx.fill();
         
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
         // Add pipe cap
         ctx.fillStyle = this.colors[1];
         ctx.beginPath();
@@ -120,6 +131,11 @@ class Obstacle {
             ctx.rect(x - 5, isTop ? y + height - 15 : y, width + 10, 15);
         }
         ctx.fill();
+        
+        // Add outline to cap
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 
     drawRock(ctx, x, y, width, height) {
@@ -134,6 +150,11 @@ class Obstacle {
         ctx.lineTo(x, y + height);
         ctx.closePath();
         ctx.fill();
+        
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 
     drawCrystal(ctx, x, y, width, height) {
@@ -146,6 +167,11 @@ class Obstacle {
         ctx.lineTo(x, y + height * 0.3);
         ctx.closePath();
         ctx.fill();
+        
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
         
         // Add crystal highlight
         ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
@@ -161,6 +187,11 @@ class Obstacle {
     drawLaser(ctx, x, y, width, height) {
         // Draw laser beam
         ctx.fillRect(x, y, width, height);
+        
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, width, height);
         
         // Add laser glow
         ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
@@ -179,11 +210,21 @@ class Obstacle {
         ctx.lineTo(x + width, y + height);
         ctx.closePath();
         ctx.fill();
+        
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 
     drawBuilding(ctx, x, y, width, height) {
         // Draw building with windows
         ctx.fillRect(x, y, width, height);
+        
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, width, height);
         
         // Add windows
         ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
@@ -195,6 +236,40 @@ class Obstacle {
                 ctx.fillRect(wx, wy, windowSize, windowSize);
             }
         }
+    }
+
+    drawGrass(ctx, x, y, width, height) {
+        // Draw Minecraft-style grass block
+        // Main block (dirt brown)
+        ctx.fillStyle = '#8B4513'; // Brown dirt color
+        ctx.fillRect(x, y, width, height);
+        
+        // Grass top (green)
+        const grassHeight = Math.min(15, height * 0.2); // Grass takes up top 20% or 15px max
+        ctx.fillStyle = '#32CD32'; // Bright green grass
+        ctx.fillRect(x, y, width, grassHeight);
+        
+        // Add grass texture (small green squares)
+        ctx.fillStyle = '#228B22'; // Darker green for texture
+        const grassSize = 4;
+        const grassSpacing = 8;
+        
+        for (let gy = y; gy < y + grassHeight; gy += grassSpacing) {
+            for (let gx = x; gx < x + width; gx += grassSpacing) {
+                if (Math.random() < 0.3) { // 30% chance for grass texture
+                    ctx.fillRect(gx + Math.random() * 4, gy + Math.random() * 4, grassSize, grassSize);
+                }
+            }
+        }
+        
+        // Add outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, width, height);
+        
+        // Add some pixelated edges to make it look more Minecraft-like
+        ctx.fillStyle = '#654321'; // Darker brown for edges
+        ctx.fillRect(x, y + grassHeight, width, 2); // Edge between grass and dirt
     }
 
     isOffScreen() {

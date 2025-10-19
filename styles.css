@@ -9,25 +9,64 @@ body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     overflow: hidden;
+    margin: 0;
+    padding: 0;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100vw;
 }
 
 #gameContainer {
     position: relative;
-    border-radius: 15px;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 #gameCanvas {
     display: block;
-    background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
+    background: linear-gradient(to bottom, #87CEEB 0%, #90EE90 50%, #98FB98 100%);
     image-rendering: auto;
-    width: 800px;
-    height: 600px;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Fullscreen Button */
+.fullscreen-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    color: #FFD700;
+    backdrop-filter: blur(5px);
+}
+
+.fullscreen-button:hover {
+    background: rgba(0, 0, 0, 0.9);
+    border-color: #FFD700;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.fullscreen-button:active {
+    transform: scale(0.95);
+}
+
+.fullscreen-button svg {
+    transition: transform 0.3s ease;
+}
+
+.fullscreen-button:hover svg {
+    transform: rotate(90deg);
 }
 
 /* Screen management */
@@ -47,12 +86,58 @@ body {
     display: none;
 }
 
+/* Game HUD - transparent overlay without dark background */
+.game-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: transparent; /* No dark overlay for game HUD */
+    pointer-events: none; /* Allow clicks to pass through to game */
+}
+
+.game-hud.hidden {
+    display: none;
+}
+
 /* Main Menu Styles */
+.menu-scroll-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.menu-scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.menu-scroll-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.menu-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 215, 0, 0.6);
+    border-radius: 4px;
+}
+
+.menu-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 215, 0, 0.8);
+}
+
 .menu-content {
     text-align: center;
     color: white;
-    max-width: 500px;
-    padding: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 0;
 }
 
 .game-title {
@@ -138,6 +223,116 @@ body {
     font-size: 1em;
     line-height: 1.6;
     color: #B0B0B0;
+    margin: 30px 0;
+}
+
+/* New scrollable content sections */
+.game-features, .controls-info, .difficulty-info, .credits, .scroll-hint {
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.game-features h3, .controls-info h3, .difficulty-info h3, .credits h3 {
+    color: #FFD700;
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.game-features ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.game-features li {
+    padding: 8px 0;
+    font-size: 1.1em;
+    color: #E0E0E0;
+}
+
+.control-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-item:last-child {
+    border-bottom: none;
+}
+
+.key {
+    background: rgba(255, 215, 0, 0.2);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #FFD700;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.action {
+    color: #B0B0B0;
+    font-size: 1em;
+}
+
+.difficulty-detail {
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    border-left: 4px solid;
+}
+
+.difficulty-detail:nth-child(2) {
+    border-left-color: #32CD32; /* Easy - green */
+}
+
+.difficulty-detail:nth-child(3) {
+    border-left-color: #FFD700; /* Normal - yellow */
+}
+
+.difficulty-detail:nth-child(4) {
+    border-left-color: #FF6347; /* Hard - red */
+}
+
+.difficulty-detail h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.2em;
+}
+
+.difficulty-detail p {
+    margin: 0;
+    color: #B0B0B0;
+    font-size: 0.95em;
+}
+
+.credits p {
+    margin: 8px 0;
+    color: #B0B0B0;
+    font-style: italic;
+}
+
+.scroll-hint {
+    background: rgba(255, 215, 0, 0.1) !important;
+    border: 2px dashed rgba(255, 215, 0, 0.4) !important;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.scroll-hint p {
+    margin: 0;
+    color: #FFD700;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
 }
 
 /* Loading Screen */

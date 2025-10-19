@@ -8,35 +8,101 @@
 </head>
 <body>
     <div id="gameContainer">
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- Fullscreen Button -->
+        <div id="fullscreenBtn" class="fullscreen-button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="currentColor"/>
+            </svg>
+        </div>
         
         <!-- Main Menu -->
         <div id="mainMenuScreen" class="screen">
-            <div class="menu-content">
-                <h1 class="game-title">Scammy's Whams</h1>
-                <p class="game-subtitle">Diamond Dash Adventure</p>
-                
-                <div class="difficulty-section">
-                    <h3>Choose Difficulty</h3>
-                    <div class="difficulty-buttons">
-                        <button class="difficulty-btn" data-difficulty="easy">
-                            <span class="btn-text">Easy</span>
-                            <span class="high-score">High Score: <span id="easyHighScore">0</span></span>
-                        </button>
-                        <button class="difficulty-btn" data-difficulty="normal">
-                            <span class="btn-text">Normal</span>
-                            <span class="high-score">High Score: <span id="normalHighScore">0</span></span>
-                        </button>
-                        <button class="difficulty-btn" data-difficulty="hard">
-                            <span class="btn-text">Hard</span>
-                            <span class="high-score">High Score: <span id="hardHighScore">0</span></span>
-                        </button>
+            <div class="menu-scroll-container">
+                <div class="menu-content">
+                    <h1 class="game-title">Scammy Wham's</h1>
+                    <p class="game-subtitle">Great Adventure</p>
+                    
+                    <div class="difficulty-section">
+                        <h3>Choose Difficulty</h3>
+                        <div class="difficulty-buttons">
+                            <button class="difficulty-btn" data-difficulty="easy">
+                                <span class="btn-text">Easy</span>
+                                <span class="high-score">High Score: <span id="easyHighScore">0</span></span>
+                            </button>
+                            <button class="difficulty-btn" data-difficulty="normal">
+                                <span class="btn-text">Normal</span>
+                                <span class="high-score">High Score: <span id="normalHighScore">0</span></span>
+                            </button>
+                            <button class="difficulty-btn" data-difficulty="hard">
+                                <span class="btn-text">Hard</span>
+                                <span class="high-score">High Score: <span id="hardHighScore">0</span></span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="menu-instructions">
-                    <p>Click on a difficulty level to start!</p>
-                    <p>Use SPACEBAR or CLICK to flap during gameplay!</p>
+                    
+                    <div class="menu-instructions">
+                        <p>Click on a difficulty level to start!</p>
+                        <p>Use SPACEBAR or CLICK to flap during gameplay!</p>
+                    </div>
+
+                    <div class="game-features">
+                        <h3>✨ Game Features</h3>
+                        <ul>
+                            <li>🌈 Beautiful rainbow trail effects</li>
+                            <li>💎 Spinning diamond with glow effects</li>
+                            <li>🎨 6 different obstacle themes</li>
+                            <li>⭐ Animated background with clouds & stars</li>
+                            <li>🎯 3 difficulty levels</li>
+                            <li>🏆 High score tracking</li>
+                            <li>✨ Particle effects & animations</li>
+                        </ul>
+                    </div>
+
+                    <div class="controls-info">
+                        <h3>🎮 Controls</h3>
+                        <div class="control-item">
+                            <span class="key">SPACEBAR</span>
+                            <span class="action">Flap diamond upward</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="key">MOUSE CLICK</span>
+                            <span class="action">Flap diamond upward</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="key">SCROLL</span>
+                            <span class="action">Navigate this menu</span>
+                        </div>
+                    </div>
+
+                    <div class="difficulty-info">
+                        <h3>📊 Difficulty Levels</h3>
+                        <div class="difficulty-detail">
+                            <h4>🟢 Easy</h4>
+                            <p>Large gaps (200px), slower speed, perfect for beginners!</p>
+                        </div>
+                        <div class="difficulty-detail">
+                            <h4>🟡 Normal</h4>
+                            <p>Medium gaps (150px), balanced speed, the classic experience!</p>
+                        </div>
+                        <div class="difficulty-detail">
+                            <h4>🔴 Hard</h4>
+                            <p>Small gaps (120px), fast speed, for the ultimate challenge!</p>
+                        </div>
+                    </div>
+
+                    <div class="credits">
+                        <h3>🎨 Credits</h3>
+                        <p><strong>Made By:</strong> Aleksey and Chris Cranirou</p>
+                        <p>Created with HTML5 Canvas & JavaScript</p>
+                        <p>Featuring smooth 60fps gameplay</p>
+                        <p>Built with love for the Flappy Bird genre</p>
+                    </div>
+
+                    <div class="scroll-hint">
+                        <p>💡 Scroll up and down to see more content!</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,7 +116,7 @@
         </div>
 
         <!-- Game HUD -->
-        <div id="gameHUD" class="screen hidden">
+        <div id="gameHUD" class="game-hud hidden">
             <div class="hud-content">
                 <div class="score-display">
                     <span class="score-label">Score:</span>

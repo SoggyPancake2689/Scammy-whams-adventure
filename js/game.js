@@ -13,9 +13,8 @@ class Game {
             return;
         }
         
-        // Set canvas size to match constants
-        this.canvas.width = CONSTANTS.CANVAS_WIDTH;
-        this.canvas.height = CONSTANTS.CANVAS_HEIGHT;
+        // Set canvas size to fill entire window
+        this.setupFullscreenCanvas();
         
         this.ui = new UIManager();
         this.particleSystem = new ParticleSystem();
@@ -37,6 +36,28 @@ class Game {
         this.initialize();
     }
 
+    // Set up fullscreen canvas
+    setupFullscreenCanvas() {
+        // Set canvas size to fill entire window
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        
+        // Update constants to match window size
+        CONSTANTS.CANVAS_WIDTH = window.innerWidth;
+        CONSTANTS.CANVAS_HEIGHT = window.innerHeight;
+        
+        console.log(`Canvas setup: ${this.canvas.width}x${this.canvas.height}`);
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            CONSTANTS.CANVAS_WIDTH = window.innerWidth;
+            CONSTANTS.CANVAS_HEIGHT = window.innerHeight;
+            console.log(`Canvas resized: ${this.canvas.width}x${this.canvas.height}`);
+        });
+    }
+
     initialize() {
         // Setup UI event listeners
         this.ui.setupEventListeners(this);
@@ -44,8 +65,66 @@ class Game {
         // Initialize UI
         this.ui.initialize();
         
+        // Setup fullscreen button
+        this.setupFullscreenButton();
+        
         // Start game loop
         this.gameLoop();
+    }
+
+    // Set up fullscreen functionality
+    setupFullscreenButton() {
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        if (!fullscreenBtn) return;
+
+        fullscreenBtn.addEventListener('click', () => {
+            this.toggleFullscreen();
+        });
+
+        // Listen for fullscreen changes to update button icon
+        document.addEventListener('fullscreenchange', () => {
+            this.updateFullscreenButton();
+        });
+
+        // Add keyboard support for fullscreen (F11)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F11') {
+                e.preventDefault();
+                this.toggleFullscreen();
+            }
+        });
+    }
+
+    // Toggle fullscreen mode
+    toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            // Enter fullscreen
+            document.documentElement.requestFullscreen().catch(err => {
+                console.log('Error attempting to enable fullscreen:', err);
+            });
+        } else {
+            // Exit fullscreen
+            document.exitFullscreen().catch(err => {
+                console.log('Error attempting to exit fullscreen:', err);
+            });
+        }
+    }
+
+    // Update fullscreen button icon based on current state
+    updateFullscreenButton() {
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        if (!fullscreenBtn) return;
+
+        const svg = fullscreenBtn.querySelector('svg');
+        if (!svg) return;
+
+        if (document.fullscreenElement) {
+            // Currently in fullscreen - show exit icon
+            svg.innerHTML = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" fill="currentColor"/>';
+        } else {
+            // Not in fullscreen - show enter icon
+            svg.innerHTML = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" fill="currentColor"/>';
+        }
     }
 
     // Start the game with selected difficulty
@@ -106,10 +185,6 @@ class Game {
             this.diamond.flap(this.currentDifficulty);
             console.log('After flap vy:', this.diamond.vy);
             
-            // Create enhanced trail particles on flap
-            const center = this.diamond.getCenter();
-            this.particleSystem.createTrail(center.x, center.y, 0, this.diamond.vy);
-            
             // Add extra sparkle effect on flap
             this.particleSystem.createSparkle(center.x, center.y);
         } else {
@@ -163,11 +238,7 @@ class Game {
                 this.diamond.updateVisuals(deltaTime);
             }
             
-            // Create continuous trail particles
-            if (Math.random() < 0.5) {
-                const center = this.diamond.getCenter();
-                this.particleSystem.createContinuousTrail(center.x, center.y, this.diamond.vx, this.diamond.vy);
-            }
+            // Trail particles removed - no longer needed
             
             // Only check collisions during actual gameplay (not during countdown)
             if (this.state === CONSTANTS.STATES.PLAYING) {

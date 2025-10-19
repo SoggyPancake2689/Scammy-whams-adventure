@@ -98,6 +98,11 @@ class Diamond {
         ctx.lineTo(-halfSize, 0);
         ctx.closePath();
         ctx.fill();
+        
+        // Add bright outline for better visibility
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
         // Add highlight
         ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';

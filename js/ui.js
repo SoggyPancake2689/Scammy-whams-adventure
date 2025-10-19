@@ -15,6 +15,11 @@ class UIManager {
             screen.classList.add('hidden');
         });
         
+        // Hide all game HUDs
+        document.querySelectorAll('.game-hud').forEach(hud => {
+            hud.classList.add('hidden');
+        });
+        
         // Show target screen - handle special cases
         let targetId = screenName + 'Screen';
         if (screenName === 'gameHUD') {

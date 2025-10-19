@@ -1,6 +1,6 @@
 // Particle system for visual effects
 class Particle {
-    constructor(x, y, vx, vy, life, color, size = 3) {
+    constructor(x, y, vx, vy, life, color, size = 3, alpha = 1) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -9,17 +9,18 @@ class Particle {
         this.maxLife = life;
         this.color = color;
         this.size = size;
-        this.alpha = 1;
+        this.alpha = alpha;
+        this.maxAlpha = alpha;
     }
 
     update(deltaTime) {
         this.x += this.vx * deltaTime;
         this.y += this.vy * deltaTime;
         this.life -= deltaTime;
-        this.alpha = this.life / this.maxLife;
+        this.alpha = (this.life / this.maxLife) * this.maxAlpha;
         
-        // Apply gravity to particles
-        this.vy += 500 * deltaTime;
+        // Apply lighter gravity to particles for slower movement
+        this.vy += 200 * deltaTime; // Reduced from 500
     }
 
     draw(ctx) {
@@ -28,10 +29,10 @@ class Particle {
         ctx.save();
         ctx.globalAlpha = this.alpha;
         
-        // Add glow effect for trail particles
+        // Add subtle glow effect for trail particles (reduced intensity)
         if (this.color === '#FFD700' || this.color === '#FFA500' || this.color === '#FF6347') {
             ctx.shadowColor = this.color;
-            ctx.shadowBlur = 10;
+            ctx.shadowBlur = 5; // Reduced from 10
         }
         
         ctx.fillStyle = this.color;
@@ -51,59 +52,9 @@ class ParticleSystem {
         this.particles = [];
     }
 
-    // Create trail particles behind the diamond
-    createTrail(x, y, vx, vy) {
-        const count = CONSTANTS.PARTICLES.TRAIL_COUNT;
-        const colors = CONSTANTS.COLORS.PARTICLE_COLORS;
-        
-        for (let i = 0; i < count; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = CONSTANTS.PARTICLES.TRAIL_SPEED * (0.5 + Math.random() * 0.5);
-            const particleVx = Math.cos(angle) * speed - vx * 0.1;
-            const particleVy = Math.sin(angle) * speed - vy * 0.1;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const life = CONSTANTS.PARTICLES.TRAIL_LIFE * (0.5 + Math.random() * 0.5);
-            
-            this.particles.push(new Particle(
-                x + (Math.random() - 0.5) * 20,
-                y + (Math.random() - 0.5) * 20,
-                particleVx,
-                particleVy,
-                life,
-                color,
-                2 + Math.random() * 3
-            ));
-        }
-    }
+    // Trail particles removed - no longer needed
 
-    // Create continuous trail that follows diamond movement
-    createContinuousTrail(x, y, vx, vy) {
-        const count = 3; // Fewer particles but more frequent
-        const colors = ['#FFD700', '#FFA500', '#FF6347', '#FF69B4', '#00BFFF'];
-        
-        for (let i = 0; i < count; i++) {
-            // Create particles that trail behind the diamond
-            const offsetX = (Math.random() - 0.5) * 15;
-            const offsetY = (Math.random() - 0.5) * 15;
-            
-            // Particles move opposite to diamond's velocity to create trailing effect
-            const particleVx = -vx * 0.3 + (Math.random() - 0.5) * 50;
-            const particleVy = -vy * 0.3 + (Math.random() - 0.5) * 50;
-            
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const life = 0.8 + Math.random() * 0.4; // Longer life for better trail
-            
-            this.particles.push(new Particle(
-                x + offsetX,
-                y + offsetY,
-                particleVx,
-                particleVy,
-                life,
-                color,
-                2 + Math.random() * 4 // Larger particles
-            ));
-        }
-    }
+    // Continuous trail particles removed - no longer needed
 
     // Create impact particles on collision
     createImpact(x, y) {
