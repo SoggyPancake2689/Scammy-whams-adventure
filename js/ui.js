@@ -263,6 +263,10 @@ class UIManager {
                             skinName = 'Sparkles';
                         } else if (code === 'iluvu') {
                             skinName = 'Saturn';
+                        } else if (code === 'poop') {
+                            skinName = 'Fajilla';
+                        } else if (code === 'tate') {
+                            skinName = 'Stinky';
                         }
                         this.showNotification(`🎉 Secret code accepted! ${skinName} skin unlocked!`, 'success');
                         this.populateSkins(); // Refresh skins display
@@ -538,6 +542,12 @@ class UIManager {
                     break;
                 case 'saturn':
                     previewEmoji = '🪐'; // Planet emoji
+                    break;
+                case 'fajilla':
+                    previewEmoji = '🐅'; // Tiger emoji
+                    break;
+                case 'stinky':
+                    previewEmoji = '💩'; // Poop emoji
                     break;
                 default:
                     previewEmoji = '💎';

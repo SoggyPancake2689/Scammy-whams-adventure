@@ -173,7 +173,9 @@ class ScoreStorage {
                     'ice': { name: 'Ice', unlocked: false, cost: 20 },
                     'sparkles': { name: 'Sparkles', unlocked: false, cost: 25, secret: true },
                     'voltz': { name: 'Voltz', unlocked: false, cost: 0, secret: true },
-                    'saturn': { name: 'Saturn', unlocked: false, cost: 0, secret: true }
+                    'saturn': { name: 'Saturn', unlocked: false, cost: 0, secret: true },
+                    'fajilla': { name: 'Fajilla', unlocked: false, cost: 0, secret: true },
+                    'stinky': { name: 'Stinky', unlocked: false, cost: 0, secret: true }
                 };
             
             // Merge stored skins with defaults (stored takes precedence)
@@ -193,7 +195,9 @@ class ScoreStorage {
                     'ice': { name: 'Ice', unlocked: false, cost: 20 },
                     'sparkles': { name: 'Sparkles', unlocked: false, cost: 25, secret: true },
                     'voltz': { name: 'Voltz', unlocked: false, cost: 0, secret: true },
-                    'saturn': { name: 'Saturn', unlocked: false, cost: 0, secret: true }
+                    'saturn': { name: 'Saturn', unlocked: false, cost: 0, secret: true },
+                    'fajilla': { name: 'Fajilla', unlocked: false, cost: 0, secret: true },
+                    'stinky': { name: 'Stinky', unlocked: false, cost: 0, secret: true }
                 };
         }
     }
@@ -249,6 +253,14 @@ class ScoreStorage {
         }
         if (code === 'iluvu') {
             this.unlockSkin('saturn');
+            return true;
+        }
+        if (code === 'poop') {
+            this.unlockSkin('fajilla');
+            return true;
+        }
+        if (code === 'tate') {
+            this.unlockSkin('stinky');
             return true;
         }
         return false;

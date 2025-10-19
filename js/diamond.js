@@ -84,6 +84,12 @@ class Diamond {
             case 'saturn':
                 this.drawSaturnSkin(ctx);
                 break;
+            case 'fajilla':
+                this.drawFajillaSkin(ctx);
+                break;
+            case 'stinky':
+                this.drawStinkySkin(ctx);
+                break;
             default:
                 this.drawDefaultSkin(ctx);
         }
@@ -307,6 +313,197 @@ class Diamond {
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc(0, 0, halfSize * 0.7, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Fajilla skin (tiger)
+    drawFajillaSkin(ctx) {
+        const halfSize = this.size / 2;
+        
+        // Draw tiger body (orange circle)
+        const tigerGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, halfSize);
+        tigerGradient.addColorStop(0, '#FF8C00'); // Dark orange center
+        tigerGradient.addColorStop(0.5, '#FFA500'); // Orange
+        tigerGradient.addColorStop(1, '#FF6347'); // Tomato red edge
+        
+        ctx.fillStyle = tigerGradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw tiger stripes (black lines)
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        
+        // Vertical stripes
+        for (let i = -2; i <= 2; i++) {
+            const x = (i * halfSize * 0.3);
+            if (Math.abs(x) < halfSize * 0.8) {
+                ctx.beginPath();
+                ctx.moveTo(x, -halfSize * 0.8);
+                ctx.lineTo(x, halfSize * 0.8);
+                ctx.stroke();
+            }
+        }
+        
+        // Horizontal stripes
+        for (let i = -2; i <= 2; i++) {
+            const y = (i * halfSize * 0.25);
+            if (Math.abs(y) < halfSize * 0.7) {
+                ctx.beginPath();
+                ctx.moveTo(-halfSize * 0.7, y);
+                ctx.lineTo(halfSize * 0.7, y);
+                ctx.stroke();
+            }
+        }
+        
+        // Draw tiger face features
+        ctx.fillStyle = '#000000';
+        
+        // Eyes
+        ctx.beginPath();
+        ctx.arc(-halfSize/4, -halfSize/6, halfSize/8, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(halfSize/4, -halfSize/6, halfSize/8, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Nose
+        ctx.beginPath();
+        ctx.arc(0, halfSize/8, halfSize/12, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Mouth (small curved line)
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, halfSize/4, halfSize/6, 0, Math.PI);
+        ctx.stroke();
+        
+        // Draw tiger ears
+        ctx.fillStyle = '#FF8C00';
+        ctx.beginPath();
+        ctx.moveTo(-halfSize * 0.6, -halfSize * 0.8);
+        ctx.lineTo(-halfSize * 0.4, -halfSize * 0.6);
+        ctx.lineTo(-halfSize * 0.5, -halfSize * 0.4);
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.moveTo(halfSize * 0.6, -halfSize * 0.8);
+        ctx.lineTo(halfSize * 0.4, -halfSize * 0.6);
+        ctx.lineTo(halfSize * 0.5, -halfSize * 0.4);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Ear stripes
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(-halfSize * 0.5, -halfSize * 0.7);
+        ctx.lineTo(-halfSize * 0.45, -halfSize * 0.5);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(halfSize * 0.5, -halfSize * 0.7);
+        ctx.lineTo(halfSize * 0.45, -halfSize * 0.5);
+        ctx.stroke();
+        
+        // Add outline
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Stinky skin (poop)
+    drawStinkySkin(ctx) {
+        const halfSize = this.size / 2;
+        
+        // Draw poop body (brown oval shape)
+        const poopGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, halfSize);
+        poopGradient.addColorStop(0, '#8B4513'); // Saddle brown center
+        poopGradient.addColorStop(0.5, '#A0522D'); // Sienna
+        poopGradient.addColorStop(1, '#654321'); // Dark brown edge
+        
+        ctx.fillStyle = poopGradient;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, halfSize * 0.8, halfSize * 1.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw poop texture (bumpy surface)
+        ctx.fillStyle = '#654321';
+        ctx.strokeStyle = '#654321';
+        ctx.lineWidth = 1;
+        
+        // Add bumps and ridges
+        for (let i = 0; i < 8; i++) {
+            const angle = (i / 8) * Math.PI * 2;
+            const radius = halfSize * (0.6 + Math.random() * 0.2);
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius * 0.7;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, halfSize * 0.1, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        // Draw poop swirls (spiral texture)
+        ctx.strokeStyle = '#8B4513';
+        ctx.lineWidth = 2;
+        
+        // Main spiral
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize * 0.3, 0, Math.PI * 4);
+        ctx.stroke();
+        
+        // Secondary spiral
+        ctx.beginPath();
+        ctx.arc(0, 0, halfSize * 0.5, 0, Math.PI * 3);
+        ctx.stroke();
+        
+        // Draw poop face (simple eyes and mouth)
+        ctx.fillStyle = '#000000';
+        
+        // Eyes
+        ctx.beginPath();
+        ctx.arc(-halfSize/5, -halfSize/4, halfSize/12, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(halfSize/5, -halfSize/4, halfSize/12, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Mouth (small curved line)
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, halfSize/6, halfSize/8, 0, Math.PI);
+        ctx.stroke();
+        
+        // Add stink lines (wavy lines above)
+        ctx.strokeStyle = '#8B4513';
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i < 3; i++) {
+            const startX = -halfSize * 0.3 + (i * halfSize * 0.3);
+            const startY = -halfSize * 1.2;
+            
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(startX + halfSize * 0.1, startY - halfSize * 0.2);
+            ctx.lineTo(startX + halfSize * 0.2, startY - halfSize * 0.1);
+            ctx.lineTo(startX + halfSize * 0.3, startY - halfSize * 0.3);
+            ctx.stroke();
+        }
+        
+        // Add outline
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, halfSize * 0.8, halfSize * 1.1, 0, 0, Math.PI * 2);
         ctx.stroke();
     }
 
