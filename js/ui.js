@@ -122,14 +122,18 @@ class UIManager {
             }
         }
         
-        // Show/hide Change Settings button based on current difficulty
+        // Show/hide Change Settings button based on current difficulty and unlock status
         const changeSettingsBtn = document.getElementById('changeSettingsBtn');
         if (changeSettingsBtn) {
             const isCustomMode = this.selectedDifficulty === 'custom';
-            if (isCustomMode) {
+            const isCustomModeUnlocked = scoreStorage.isCustomModeUnlocked();
+            
+            if (isCustomMode && isCustomModeUnlocked) {
                 changeSettingsBtn.classList.remove('hidden');
+                changeSettingsBtn.classList.remove('locked');
             } else {
                 changeSettingsBtn.classList.add('hidden');
+                changeSettingsBtn.classList.add('locked');
             }
         }
         
@@ -297,6 +301,11 @@ class UIManager {
         const changeSettingsBtn = document.getElementById('changeSettingsBtn');
         if (changeSettingsBtn) {
             const handleChangeSettings = () => {
+                // Check if Custom Mode is unlocked before allowing settings change
+                if (!scoreStorage.isCustomModeUnlocked()) {
+                    this.showLockedMessage();
+                    return;
+                }
                 this.showCustomSettings();
             };
             changeSettingsBtn.addEventListener('click', handleChangeSettings);

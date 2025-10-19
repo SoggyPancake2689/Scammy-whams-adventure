@@ -169,8 +169,8 @@ class Game {
             );
         });
         
-        // Create diamond in center of screen
-        this.diamond = new Diamond(150, CONSTANTS.CANVAS_HEIGHT / 2);
+        // Create diamond at starting position (almost all the way to the left)
+        this.diamond = new Diamond(CONSTANTS.DIAMOND.START_X, CONSTANTS.DIAMOND.START_Y);
         console.log(`Diamond created at position: (${this.diamond.x}, ${this.diamond.y})`);
         
         // Clear systems

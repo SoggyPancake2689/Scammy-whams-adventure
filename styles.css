@@ -863,6 +863,21 @@ body {
     box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4) !important;
 }
 
+.custom-settings-btn.locked {
+    background: linear-gradient(45deg, #666, #555) !important;
+    color: #999 !important;
+    border-color: #444 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.custom-settings-btn.locked:hover {
+    background: linear-gradient(45deg, #666, #555) !important;
+    transform: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
 /* Custom Mode button styling */
 .difficulty-btn[data-difficulty="custom"] {
     background: linear-gradient(45deg, #4CAF50, #388E3C) !important;

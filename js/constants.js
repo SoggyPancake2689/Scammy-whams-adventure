@@ -54,7 +54,9 @@ const CONSTANTS = {
     DIAMOND: {
         SIZE: 30,
         ROTATION_SPEED: 5.0, // Much faster rotation (was 0.6)
-        GLOW_INTENSITY: 0.8
+        GLOW_INTENSITY: 0.8,
+        START_X: 100, // Start almost all the way to the left
+        START_Y: 300  // Center vertically
     },
     
     // Obstacle settings
